@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.BeWell" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.BeWell" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/backgroundColor</item>
+        <item name="android:navigationBarColor">@color/backgroundColor</item>
+        <item name="android:windowLightStatusBar">@color/backgroundColor</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">@color/backgroundColor</item>
+    </style>
+
 </resources>
