@@ -1,6 +1,8 @@
 package com.example.bewell.common
 
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -31,6 +33,7 @@ sealed class BottomNavigationScreens(val route: String, val title: String, val i
 }
 
 //NavGraph
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
@@ -52,6 +55,7 @@ fun NavGraph(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun BottomNavGraph(
     modifier: Modifier = Modifier,

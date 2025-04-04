@@ -1,5 +1,8 @@
 package com.example.bewell.ui.presentation.screens
 
+import android.Manifest
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -8,6 +11,7 @@ import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -19,18 +23,42 @@ import com.example.bewell.Utils.Utils
 import com.example.bewell.common.BottomNavGraph
 import com.example.bewell.ui.theme.darkBlueColor
 import com.example.bewell.ui.theme.secondaryColor
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
+@OptIn(ExperimentalPermissionsApi::class)
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
+    val state = rememberPermissionState(
+        Manifest.permission.ACTIVITY_RECOGNITION
+    )
+
+
+
     Scaffold(topBar = {}, bottomBar = {
-        BottomNavigationBar(navController)
+        if(state.status.isGranted) {
+            BottomNavigationBar(navController)
+        }
     }, content = { innerPadding ->
-        BottomNavGraph(
-            modifier = Modifier.padding(innerPadding), navController = navController
-        )
+        when{
+            state.status.isGranted -> {
+                BottomNavGraph(
+                    modifier = Modifier.padding(innerPadding), navController = navController
+                )
+            }
+            else -> {
+                LaunchedEffect(Unit) {
+                    state.launchPermissionRequest()
+                }
+                PermissionRationale()
+            }
+        }
     })
 }
+
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
