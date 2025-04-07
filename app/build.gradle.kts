@@ -62,8 +62,10 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.runtime.livedata)
 
-    //
+    //Permission
     implementation(libs.accompanist.permissions)
 
+    //Koin
+    implementation(libs.koin.androidx.compose)
 
 }

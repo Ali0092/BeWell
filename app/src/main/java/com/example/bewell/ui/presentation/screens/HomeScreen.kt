@@ -1,64 +1,57 @@
 package com.example.bewell.ui.presentation.screens
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.provider.Settings
-import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
+
+import android.R.attr.strokeWidth
+import android.graphics.Color
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Place
 import androidx.compose.material.icons.rounded.Star
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.core.content.ContextCompat.startActivity
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.example.bewell.R
-import com.example.bewell.common.BottomNavGraph
-import com.example.bewell.common.Screens
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor
 import com.example.bewell.ui.theme.darkBlueColor
-import com.example.bewell.ui.theme.lightBlueColor
+import com.example.bewell.ui.theme.darkPurpleColor
 import com.example.bewell.ui.theme.secondaryColor
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
+import com.example.bewell.ui.viewmodel.StepsCounterViewModel
+import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(modifier: Modifier = Modifier, viewModel: StepsCounterViewModel = getViewModel()) {
+
+    val steps = viewModel.counter.collectAsState().value
+    val calories = viewModel.calories.collectAsState().value
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -91,6 +84,82 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 
         }
 
+        Spacer(modifier = Modifier.height(16.sdp))
+
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.sdp),
+            color = secondaryColor,
+            shape = RoundedCornerShape(16.sdp),
+            shadowElevation = 2.sdp
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
+                Column(
+                    modifier = Modifier.padding(vertical = 16.sdp, horizontal = 12.sdp),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(painter = painterResource(R.drawable.day), contentDescription = null, modifier = Modifier.size(25.sdp))
+                        Spacer(modifier = Modifier.width(8.sdp))
+                        Text(
+                            text = "1",
+                            fontSize = 24.textSdp,
+                            color = darkBlueColor,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.width(4.sdp))
+                        Text(
+                            text = "day",
+                            fontSize = 14.textSdp,
+                            color = darkPurpleColor,
+                            fontWeight = FontWeight.Normal
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(6.sdp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(painter = painterResource(R.drawable.footprint), contentDescription = null, modifier = Modifier.size(25.sdp))
+                        Spacer(modifier = Modifier.width(8.sdp))
+                        Text(
+                            text = "${steps}",
+                            fontSize = 24.textSdp,
+                            color = darkBlueColor,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.width(4.sdp))
+                        Text(
+                            text = "steps",
+                            fontSize = 14.textSdp,
+                            color = darkPurpleColor,
+                            fontWeight = FontWeight.Normal
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(6.sdp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(painter = painterResource(R.drawable.calories), contentDescription = null, modifier = Modifier.size(25.sdp))
+                        Spacer(modifier = Modifier.width(8.sdp))
+                        Text(
+                            text = "${calories}",
+                            fontSize = 24.textSdp,
+                            color = darkBlueColor,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.width(4.sdp))
+                        Text(
+                            text = "kcal",
+                            fontSize = 14.textSdp,
+                            color = darkPurpleColor,
+                            fontWeight = FontWeight.Normal
+                        )
+                    }
+
+                }
+                Spacer(modifier.weight(1f))
+                CircularProgressBar(modifier = Modifier.padding(16.sdp), progress = 0.3f, size = 120.sdp, strokeWidth = 8.sdp)
+            }
+
+        }
+
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -106,7 +175,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Steps 0",
+                    text = "Total Steps ${calories}",
                     fontSize = 30.textSdp,
                     color = darkBlueColor,
                     fontWeight = FontWeight.Bold
@@ -118,50 +187,61 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     }
 }
 
-
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun PermissionRationale() {
+fun CircularProgressBar(
+    modifier: Modifier = Modifier,
+    progress: Float, // Between 0f and 1f
+    size: Dp = 100.dp,
+    strokeWidth: Dp = 10.dp,
+    animate: Boolean = true,
+    content: (@Composable () -> Unit)? = null
+) {
+    val animatedProgress = animateFloatAsState(
+        targetValue = progress.coerceIn(0f, 1f),
+        animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing),
+        label = "circularProgressAnim"
+    )
+
     Box(
-        Modifier
-            .fillMaxSize()
-            .background(backgroundColor)
+        modifier = modifier
+            .size(size)
+            .padding(strokeWidth / 2),
+        contentAlignment = Alignment.Center
     ) {
-        Column(Modifier.padding(vertical = 40.sdp, horizontal = 16.sdp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-            Icon(painter = painterResource(R.drawable.permission_icon), modifier = Modifier.size(100.sdp),contentDescription = null)
-            Spacer(Modifier.height(12.sdp))
-            Text("Activity Recognizer Permission Required", fontWeight = FontWeight.Bold, fontSize = 24.textSdp, color = darkBlueColor, textAlign = TextAlign.Center)
-            Spacer(Modifier.height(18.sdp))
-            Text("This permission allows the app to detect and understand your physical activities, such as walking, running, cycling, or driving. It helps enhance user experience by enabling features like step counting, activity tracking, and intelligent behavior-based responses. Your activity data is processed securely and used solely to provide personalized and context-aware functionality within the app.",
-                fontWeight = FontWeight.Medium,
-                fontSize = 18.textSdp,
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val sweepAngle = animatedProgress.value * 360
+
+            // Draw background circle
+            drawArc(
+                color = backgroundColor,
+                startAngle = 0f,
+                sweepAngle = 360f,
+                useCenter = false,
+                style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
+            )
+
+            // Draw progress arc
+            drawArc(
                 color = darkBlueColor,
-                modifier = Modifier.alpha(0.7f),
-                textAlign = TextAlign.Center
+                startAngle = -90f,
+                sweepAngle = sweepAngle,
+                useCenter = false,
+                style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
             )
-        }
-        val context = LocalContext.current
 
-        ElevatedButton(
-            colors = ButtonDefaults.buttonColors(containerColor = darkBlueColor),
-            onClick = {
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    data = Uri.fromParts("package", context.packageName, null)
-                }
-                startActivity(context,intent, null)
-            },
-            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 24.sdp)
-
-
-        ) {
-            Text(
-                modifier = Modifier.padding(horizontal = 8.sdp, vertical = 4.sdp),
-                text = "Go to settings",
-                color = Color.White,
-                fontSize = 14.textSdp,
-                fontWeight = FontWeight.SemiBold
-            )
         }
 
+        Text(
+            text = animatedProgress.value.toString()+" %",
+            fontSize = 18.textSdp,
+            color = darkPurpleColor,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.Center)
+        )
+
+        // Center content (optional)
+        content?.let {
+            it()
+        }
     }
 }
