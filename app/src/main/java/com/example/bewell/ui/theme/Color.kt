@@ -17,6 +17,6 @@ val backgroundColor = Color(0xFFf7f7f7)
 
 val lightRedColor = Color(0xFFf76967)
 val darkBlueColor = Color(0xFF46607A)
-val lightBlueColor = Color(0xFF5878c0)
+val lightBlueColor = Color(0x6A46607A)
 
 val darkPurpleColor = Color(0xFF190b2a)
