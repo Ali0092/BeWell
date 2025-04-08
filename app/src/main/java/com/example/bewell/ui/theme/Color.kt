@@ -19,4 +19,9 @@ val lightRedColor = Color(0xFFf76967)
 val darkBlueColor = Color(0xFF46607A)
 val lightBlueColor = Color(0x6A46607A)
 
+val lightGreenColor = Color(0xFF01BD50)
+val darkGreenColor = Color(0x6601BD50)
+
+
 val darkPurpleColor = Color(0xFF190b2a)
+val lightPurpleColor = Color(0x81190B2A)

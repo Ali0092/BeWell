@@ -1,9 +1,5 @@
 package com.example.bewell.ui.presentation.screens
 
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -11,47 +7,43 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextMeasurer
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.rememberTextMeasurer
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.bewell.R
+import com.example.bewell.common.CircularProgressBar
+import com.example.bewell.common.LinearProgressBar
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor
 import com.example.bewell.ui.theme.darkBlueColor
+import com.example.bewell.ui.theme.darkGreenColor
 import com.example.bewell.ui.theme.darkPurpleColor
 import com.example.bewell.ui.theme.lightBlueColor
+import com.example.bewell.ui.theme.lightGreenColor
+import com.example.bewell.ui.theme.lightPurpleColor
 import com.example.bewell.ui.theme.secondaryColor
 import com.example.bewell.ui.viewmodel.StepsCounterViewModel
 import org.koin.androidx.compose.getViewModel
@@ -63,9 +55,7 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: StepsCounterViewModel =
     val calories = viewModel.calories.collectAsState().value
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(backgroundColor)
+        modifier = modifier.fillMaxSize().background(backgroundColor).padding(bottom = 8.sdp).clipToBounds().verticalScroll(rememberScrollState())
     ) {
 
         Box(
@@ -100,10 +90,10 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: StepsCounterViewModel =
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.sdp, end = 16.sdp, top = 16.sdp),
+                .padding(horizontal = 16.sdp),
             color = secondaryColor,
             shape = RoundedCornerShape(16.sdp),
-            shadowElevation = 2.sdp
+            shadowElevation = 1.sdp
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -190,16 +180,16 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: StepsCounterViewModel =
             }
 
         }
-
+        Spacer(modifier = Modifier.height(16.sdp))
         //weekly card
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(120.sdp)
-                .padding(start = 16.sdp, end = 16.sdp, top = 16.sdp),
+                .padding(horizontal = 16.sdp),
             color = secondaryColor,
             shape = RoundedCornerShape(16.sdp),
-            shadowElevation = 2.sdp
+            shadowElevation = 1.sdp
         ) {
             Row(
                 modifier = Modifier
@@ -223,123 +213,108 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: StepsCounterViewModel =
                         text = "/6,000 steps",
                         fontSize = 14.textSdp,
                         color = lightBlueColor,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Bold
                     )
                 }
-                LinearProgressBar(modifier = Modifier.weight(1f), text = "20%")
+                LinearProgressBar(modifier = Modifier.padding(16.sdp), text = "20%", progressBackgroundColor = lightBlueColor, progressColor = darkBlueColor, progressIndicatorTextColor = darkBlueColor)
             }
         }
-
+        Spacer(modifier = Modifier.height(16.sdp))
+        //Food, Sleep,Water
+        HomeScreenRoutineItem(
+            icon = R.drawable.food_icon,
+            title = "Food",
+            buttonText = "Enter Food",
+            progressBackgroundColor = darkGreenColor,
+            progressColor = lightGreenColor,
+            progressIndicatorTextColor = lightGreenColor,
+            progressIndicatorText = "10%"
+        )//Food
+        Spacer(modifier = Modifier.height(16.sdp))
+        HomeScreenRoutineItem(
+            icon = R.drawable.water_icon,
+            title = "Water",
+            buttonText = "Add Water",
+            progressBackgroundColor = lightPurpleColor,
+            progressColor = darkPurpleColor,
+            progressIndicatorTextColor = darkPurpleColor,
+            progressIndicatorText = "20%"
+        )//Sleep
+        Spacer(modifier = Modifier.height(16.sdp))
+        HomeScreenRoutineItem(
+            icon = R.drawable.sleep_icon,
+            title = "Sleep",
+            buttonText = "Add Sleep Time",
+            progressBackgroundColor = lightBlueColor,
+            progressColor = darkBlueColor,
+            progressIndicatorTextColor = darkBlueColor,
+            progressIndicatorText = "Target",
+            isLastItem = true
+        )//Water
     }
 }
 
 @Composable
-fun LinearProgressBar(modifier: Modifier = Modifier, text: String) {
-
-    val textMeasurer = rememberTextMeasurer()
-
-
-    val style = TextStyle(
-        fontSize = 14.textSdp,
-        color = darkPurpleColor,
-        fontWeight = FontWeight.Bold,
-        background = lightBlueColor
-    )
-
-    val textLayoutResult = remember(text, style) {
-        textMeasurer.measure(text, style)
-    }
-
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Canvas(modifier = Modifier
-            .fillMaxHeight()
-            .width(100.sdp)) {
-
-            drawText(
-                textMeasurer = textMeasurer,
-                text = text,
-                style = style,
-                topLeft = Offset(
-                    x = 50f,
-                    y = size.height/2-45f,
-                )
-            )
-
-            //background progress indicator
-            drawLine(
-                color = lightBlueColor,
-                start = Offset(0f, size.height / 2),
-                end = Offset(size.width, size.height / 2),
-                strokeWidth = 15f,
-                cap = StrokeCap.Round
-            )
-            //foreground progress indicator
-            drawLine(
-                color = darkBlueColor,
-                start = Offset(0f, size.height / 2),
-                end = Offset(50f, size.height / 2),
-                strokeWidth = 15f,
-                cap = StrokeCap.Round
-            )
-        }
-    }
-
-}
-
-@Composable
-fun CircularProgressBar(
-    modifier: Modifier = Modifier,
-    progress: Float, // Between 0f and 1f
-    size: Dp = 100.dp,
-    strokeWidth: Dp = 10.dp,
-    animate: Boolean = true,
-    content: (@Composable () -> Unit)? = null,
+fun HomeScreenRoutineItem(
+    icon: Int,
+    title: String,
+    buttonText: String,
+    progressBackgroundColor: Color,
+    progressColor: Color,
+    progressIndicatorText: String,
+    progressIndicatorTextColor: Color,
+    progressIndicatorOffset: Offset = Offset(0f,0f),
+    isLastItem: Boolean = false
 ) {
-    val animatedProgress = animateFloatAsState(
-        targetValue = progress.coerceIn(0f, 1f),
-        animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing),
-        label = "circularProgressAnim"
-    )
-
-    Box(
-        modifier = modifier
-            .size(size)
-            .padding(strokeWidth / 2), contentAlignment = Alignment.Center
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(120.sdp)
+            .padding(start = 16.sdp, end = 16.sdp, bottom = if (isLastItem) 2.sdp else 0.sdp ),
+        color = secondaryColor,
+        shape = RoundedCornerShape(16.sdp),
+        shadowElevation = 1.sdp
     ) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val sweepAngle = animatedProgress.value * 360
+        Row(
+            modifier = Modifier.padding(16.sdp), verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
+                Row {
+                    Image(
+                        painter = painterResource(icon),
+                        contentDescription = null,
+                        modifier = Modifier.size(25.sdp)
+                    )
+                    Spacer(modifier = Modifier.width(8.sdp))
+                    Text(
+                        text = title,
+                        fontSize = 17.textSdp,
+                        color = darkBlueColor,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.sdp))
+                ElevatedButton(
+                    colors = ButtonDefaults.buttonColors(containerColor = darkBlueColor),
+                    onClick = {
 
-            // Draw background circle
-            drawArc(
-                color = lightBlueColor,
-                startAngle = 0f,
-                sweepAngle = 360f,
-                useCenter = false,
-                style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
+                    }) {
+                    Text(
+                        modifier = Modifier.padding(horizontal = 4.sdp, vertical = 2.sdp),
+                        text = buttonText,
+                        color = Color.White,
+                        fontSize = 12.textSdp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            }
+            LinearProgressBar(
+                modifier = Modifier.padding(16.sdp),
+                text = progressIndicatorText,
+                progressBackgroundColor = progressBackgroundColor,
+                progressColor = progressColor,
+                progressIndicatorTextColor = progressIndicatorTextColor
             )
-
-            // Draw progress arc
-            drawArc(
-                color = darkBlueColor,
-                startAngle = -90f,
-                sweepAngle = sweepAngle,
-                useCenter = false,
-                style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
-            )
-
-        }
-
-        Text(
-            text = animatedProgress.value.toString() + " %",
-            fontSize = 18.textSdp,
-            color = darkPurpleColor,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.Center)
-        )
-
-        // Center content (optional)
-        content?.let {
-            it()
         }
     }
 }
