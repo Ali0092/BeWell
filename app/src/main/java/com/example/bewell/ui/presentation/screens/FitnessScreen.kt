@@ -2,12 +2,9 @@ package com.example.bewell.ui.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,20 +21,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -50,7 +44,6 @@ import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor
 import com.example.bewell.ui.theme.darkBlueColor
 import com.example.bewell.ui.theme.lightBlueColor
-import com.example.bewell.ui.theme.lightGreenColor
 import com.example.bewell.ui.theme.secondaryColor
 
 @Composable
@@ -63,7 +56,8 @@ fun FitnessScreen(modifier: Modifier = Modifier) {
         (250f - currentBarSize) / (250f - 60f)
     }
 
-    val nestedScrollConnection = remember { object : NestedScrollConnection {
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
             override suspend fun onPostFling(
                 consumed: Velocity,
                 available: Velocity,
@@ -96,19 +90,22 @@ fun FitnessScreen(modifier: Modifier = Modifier) {
 
                 return Offset(0f, consumed)
             }
-        } }
+        }
+    }
 
-    ///////////////////////////
-    Box(modifier = modifier.fillMaxSize()
-        .background(backgroundColor)
-        .padding(bottom = 54.sdp)
-        .nestedScroll(nestedScrollConnection)
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(backgroundColor)
+            .padding(bottom = 54.sdp)
+            .nestedScroll(nestedScrollConnection)
     ) {
         //column
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(currentBarSize.toFloat().dp)
-            .padding(horizontal = 16.sdp)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(currentBarSize.toFloat().dp)
+                .padding(horizontal = 16.sdp)
         ) {
             // Calculate the horizontal offset for the text
             // When expanded (collapseProgress = 0), offset is 0 (centered)
@@ -117,10 +114,7 @@ fun FitnessScreen(modifier: Modifier = Modifier) {
             val maxOffset = (screenWidth / 2) - 48  // Rough estimate for centered to start position
             val horizontalOffset = maxOffset * collapseProgress
 
-            //- 16 - 24
-
             val fontSize = 36 - (10 * collapseProgress)
-
 
             Text(
                 text = "Fitness",
@@ -155,7 +149,7 @@ fun FitnessScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun FitnessScreenBar(modifier: Modifier = Modifier, title:String, image: Int) {
+fun FitnessScreenBar(modifier: Modifier = Modifier, title: String, image: Int) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -164,13 +158,17 @@ fun FitnessScreenBar(modifier: Modifier = Modifier, title:String, image: Int) {
         shape = RoundedCornerShape(16.sdp),
         shadowElevation = 1.sdp
     ) {
-        Column(modifier = Modifier
-            .padding(vertical = 12.sdp)
-            .fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .padding(vertical = 12.sdp)
+                .fillMaxSize()
+        ) {
             Text(
                 text = title,
                 textAlign = TextAlign.Start,
-                modifier = Modifier.fillMaxWidth().padding(16.sdp, bottom = 8.sdp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.sdp, bottom = 8.sdp),
                 color = darkBlueColor,
                 fontSize = 16.textSdp,
                 fontWeight = FontWeight.Bold
@@ -189,17 +187,25 @@ fun FitnessScreenBar(modifier: Modifier = Modifier, title:String, image: Int) {
 @Composable
 fun FitnessBarSingleItem(img: Int) {
 
-    Column(modifier = Modifier.wrapContentHeight().width(140.sdp).padding(start = 12.sdp)) {
-        Image(painter = painterResource(img),
+    Column(
+        modifier = Modifier
+            .wrapContentHeight()
+            .width(140.sdp)
+            .padding(start = 12.sdp)
+    ) {
+        Image(
+            painter = painterResource(img),
             contentDescription = null,
-            modifier = Modifier.size(140.sdp).clip(RoundedCornerShape(12.sdp)),
-            contentScale = ContentScale.Crop)
+            modifier = Modifier
+                .size(140.sdp)
+                .clip(RoundedCornerShape(12.sdp)),
+            contentScale = ContentScale.Crop
+        )
         Spacer(modifier = Modifier.height(4.sdp))
         Text(
             text = "Dumbbell exercise daily 4 times......",
             textAlign = TextAlign.Start,
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             color = darkBlueColor,
             fontSize = 14.textSdp,
             fontWeight = FontWeight.Bold,
@@ -208,8 +214,7 @@ fun FitnessBarSingleItem(img: Int) {
         Text(
             text = "Fitness",
             textAlign = TextAlign.Start,
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             color = lightBlueColor,
             fontSize = 11.textSdp,
             fontWeight = FontWeight.Bold
