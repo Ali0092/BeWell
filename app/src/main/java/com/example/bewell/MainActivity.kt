@@ -6,18 +6,14 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.rememberNavController
 import com.example.bewell.common.NavGraph
 import com.example.bewell.common.Screens
 import com.example.bewell.ui.theme.BeWellTheme
 import com.example.bewell.ui.viewmodel.StepsCounterViewModel
-import kotlinx.coroutines.flow.update
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity(), SensorEventListener {
@@ -37,7 +33,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
             BeWellTheme {
                 NavGraph(
                     navController = rememberNavController(),
-                    startDestination = Screens.MAIN.name
+                    startDestination = Screens.ONBOARDING.name
                 )
             }
         }

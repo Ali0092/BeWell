@@ -70,7 +70,7 @@ fun OnboardingScreen(modifier: Modifier = Modifier, navController: NavHostContro
             ElevatedButton(
                 colors = ButtonDefaults.buttonColors(containerColor = darkBlueColor),
                 onClick = {
-                navController.navigate(Screens.MAIN.name)
+                navController.navigate(Screens.CREATE_PROFILE.name)
             }, modifier = Modifier.align(Alignment.BottomEnd)) {
                 Text(
                     modifier = Modifier.padding(horizontal = 8.sdp, vertical = 4.sdp),

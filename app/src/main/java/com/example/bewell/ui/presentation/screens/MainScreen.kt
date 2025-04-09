@@ -27,6 +27,32 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 
+
+
+
+
+
+/*
+*
+
+DailyStats (per day)
+- date (primary key)
+- steps
+- sleepHours
+- waterGlasses
+- caloriesFromSteps (calculated)
+- caloriesFromSleep (optional)
+- foodList: List<FoodItem>
+- caloriesConsumed (sum of food calories)
+
+FoodItem
+- name
+- amount
+- calories
+* */
+
+
+
 @OptIn(ExperimentalPermissionsApi::class)
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
