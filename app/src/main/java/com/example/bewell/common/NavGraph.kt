@@ -29,7 +29,7 @@ sealed class SimpleNavigation(val route: String) {
 sealed class BottomNavigationScreens(val route: String, val title: String, val icon: Int) {
     class Home: BottomNavigationScreens(Screens.HOME.name, "Home", R.drawable.home_icon)
     class Fitness: BottomNavigationScreens(Screens.FITNESS.name, "Fitness", R.drawable.fitness_icon)
-    class Profile: BottomNavigationScreens(Screens.PROFILE.name, "Profile", R.drawable.profile_icon)
+    class Profile: BottomNavigationScreens(Screens.PROFILE.name, "Profile", R.drawable.profile_picture)
 }
 
 //NavGraph
