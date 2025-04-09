@@ -2,12 +2,16 @@ package com.example.bewell.ui.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -18,54 +22,136 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Velocity
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.bewell.R
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor
 import com.example.bewell.ui.theme.darkBlueColor
 import com.example.bewell.ui.theme.lightBlueColor
+import com.example.bewell.ui.theme.lightGreenColor
 import com.example.bewell.ui.theme.secondaryColor
 
 @Composable
 fun FitnessScreen(modifier: Modifier = Modifier) {
 
-    Box {
-        s
+    var currentBarSize by remember { mutableFloatStateOf(250f) }
+    // Calculate transition progress (0.0 = expanded, 1.0 = collapsed)
+    val collapseProgress = remember(currentBarSize) {
+        // Map 250f-60f range to 0f-1f
+        (250f - currentBarSize) / (250f - 60f)
     }
 
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .background(backgroundColor)
+    val nestedScrollConnection = remember { object : NestedScrollConnection {
+            override suspend fun onPostFling(
+                consumed: Velocity,
+                available: Velocity,
+            ): Velocity {
+                return super.onPostFling(consumed, available)
+            }
+
+            override fun onPostScroll(
+                consumed: Offset,
+                available: Offset,
+                source: NestedScrollSource,
+            ): Offset {
+                return super.onPostScroll(consumed, available, source)
+            }
+
+            override suspend fun onPreFling(available: Velocity): Velocity {
+                return super.onPreFling(available)
+            }
+
+            override fun onPreScroll(
+                available: Offset,
+                source: NestedScrollSource,
+            ): Offset {
+                val delta = available.y
+
+                val previousBarSize = currentBarSize
+                val newBarSize = currentBarSize + delta.dp.value.toFloat()
+                currentBarSize = newBarSize.coerceIn(60f, 250f)
+                val consumed = currentBarSize - previousBarSize
+
+                return Offset(0f, consumed)
+            }
+        } }
+
+    ///////////////////////////
+    Box(modifier = modifier.fillMaxSize()
+        .background(backgroundColor)
+        .padding(bottom = 54.sdp)
+        .nestedScroll(nestedScrollConnection)
     ) {
-        item {
+        //column
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(currentBarSize.toFloat().dp)
+            .padding(horizontal = 16.sdp)
+        ) {
+            // Calculate the horizontal offset for the text
+            // When expanded (collapseProgress = 0), offset is 0 (centered)
+            // When collapsed (collapseProgress = 1), offset moves text to start
+            val screenWidth = LocalConfiguration.current.screenWidthDp
+            val maxOffset = (screenWidth / 2) - 48  // Rough estimate for centered to start position
+            val horizontalOffset = maxOffset * collapseProgress
+
+            //- 16 - 24
+
+            val fontSize = 36 - (10 * collapseProgress)
+
+
             Text(
                 text = "Fitness",
-                textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.sdp),
                 color = darkBlueColor,
-                fontSize = 21.textSdp,
-                fontWeight = FontWeight.Bold
+                fontSize = fontSize.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .offset(x = (-horizontalOffset).dp)
             )
         }
-        item {
-            FitnessScreenBar(title = "Weight Loss", image = R.drawable.fitness1)
-        }
-        item {
-            FitnessScreenBar(title = "Build Muscle", image = R.drawable.fitness2)
-        }
-        item {
-            FitnessScreenBar(title = "Balanced Training", image = R.drawable.fitness3)
+
+        //list....
+        LazyColumn(
+            modifier = modifier
+                .fillMaxWidth()
+                .align(Alignment.TopStart)
+                .offset(0.sdp, currentBarSize.toFloat().dp)
+        ) {
+            item {
+                FitnessScreenBar(title = "Weight Loss", image = R.drawable.fitness1)
+            }
+            item {
+                FitnessScreenBar(title = "Build Muscle", image = R.drawable.fitness2)
+            }
+            item {
+                FitnessScreenBar(title = "Balanced Training", image = R.drawable.fitness3)
+            }
         }
     }
+
 }
 
 @Composable
@@ -73,7 +159,7 @@ fun FitnessScreenBar(modifier: Modifier = Modifier, title:String, image: Int) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = 8.sdp, end = 8.sdp, bottom = 16.sdp),
+            .padding(start = 8.sdp, end = 8.sdp, bottom = 12.sdp),
         color = secondaryColor,
         shape = RoundedCornerShape(16.sdp),
         shadowElevation = 1.sdp
