@@ -3,6 +3,7 @@
   <component name="StacktraceSettings">
     <option name="folders">
       <set>
+        <option value="$PROJECT_DIR$/app/build/generated/ksp/debug/kotlin" />
         <option value="$PROJECT_DIR$/app/build/generated/res/resValues/debug" />
         <option value="$PROJECT_DIR$/app/src/androidTest/java" />
         <option value="$PROJECT_DIR$/app/src/main/java" />

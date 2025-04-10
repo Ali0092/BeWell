@@ -1,4 +1,4 @@
-package com.example.bewell.ui.presentation.screens
+package com.example.bewell.presentation.screens
 
 import android.content.Intent
 import android.net.Uri
@@ -77,9 +77,8 @@ fun PermissionRationale() {
 
         ElevatedButton(
             colors = ButtonDefaults.buttonColors(containerColor = darkBlueColor), onClick = {
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    data = Uri.fromParts("package", context.packageName, null)
-                }
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = Uri.fromParts("package", context.packageName, null)
                 startActivity(context, intent, null)
             }, modifier = Modifier
                 .align(Alignment.BottomCenter)

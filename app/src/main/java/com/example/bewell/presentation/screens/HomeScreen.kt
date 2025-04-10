@@ -1,4 +1,4 @@
-package com.example.bewell.ui.presentation.screens
+package com.example.bewell.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -57,7 +57,7 @@ import com.example.bewell.ui.theme.lightBlueColor
 import com.example.bewell.ui.theme.lightGreenColor
 import com.example.bewell.ui.theme.lightPurpleColor
 import com.example.bewell.ui.theme.secondaryColor
-import com.example.bewell.ui.viewmodel.StepsCounterViewModel
+import com.example.bewell.presentation.viewmodel.StepsCounterViewModel
 import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

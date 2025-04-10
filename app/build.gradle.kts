@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -67,5 +68,22 @@ dependencies {
 
     //Koin
     implementation(libs.koin.androidx.compose)
+
+    //Coil
+    implementation(libs.coil.compose)
+
+    //DataStore
+    implementation(libs.androidx.datastore.preferences)
+
+    //Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+
+    //KSP
+    ksp(libs.androidx.room.compiler)
+
+    //splash screen library
+    implementation(libs.androidx.core.splashscreen)
+
 
 }

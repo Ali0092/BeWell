@@ -1,4 +1,4 @@
-package com.example.bewell.ui.presentation.screens
+package com.example.bewell.presentation.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
