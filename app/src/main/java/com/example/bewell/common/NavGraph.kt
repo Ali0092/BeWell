@@ -15,16 +15,24 @@ import com.example.bewell.ui.presentation.screens.HomeScreen
 import com.example.bewell.ui.presentation.screens.MainScreen
 import com.example.bewell.ui.presentation.screens.OnboardingScreen
 import com.example.bewell.ui.presentation.screens.ProfileScreen
+import com.example.bewell.ui.presentation.screens.SetupUserGoal
 
 //Navigation Routes List
 enum class Screens {
-    ONBOARDING,CREATE_PROFILE, MAIN, HOME, FITNESS, PROFILE
+    ONBOARDING,
+    CREATE_PROFILE,
+    SETUP_GOAL,
+    MAIN,
+    HOME,
+    FITNESS,
+    PROFILE
 }
 
 //Navigation
 sealed class SimpleNavigation(val route: String) {
     class OnBoarding: SimpleNavigation(Screens.ONBOARDING.name)
     class CreateProfile: SimpleNavigation(Screens.CREATE_PROFILE.name)
+    class SetupGoal: SimpleNavigation(Screens.SETUP_GOAL.name)
     class Main: SimpleNavigation(Screens.ONBOARDING.name)
 }
 
@@ -53,6 +61,9 @@ fun NavGraph(
         }
         composable(Screens.CREATE_PROFILE.name) {
             CreateUserProfileScreen(navController = navController)
+        }
+        composable(Screens.SETUP_GOAL.name) {
+            SetupUserGoal(navController = navController)
         }
         composable(Screens.MAIN.name) {
             MainScreen()

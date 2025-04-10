@@ -46,115 +46,41 @@ import com.example.bewell.ui.theme.primaryColor
 //- weight
 
 @Composable
-fun CreateUserProfileScreen(navController: NavHostController) {
+fun SetupUserGoal(navController: NavHostController) {
 
-    var name by remember { mutableStateOf("") }
-    var age by remember { mutableStateOf("") }
-    var gender by remember { mutableStateOf("Male") }
-    var height by remember { mutableStateOf("0") }
-    var weight by remember { mutableStateOf("0") }
-
-
+    var stepsPerDayGoal by remember { mutableStateOf("0") }
+    var caloriesIntake by remember { mutableStateOf("0") }
+    var caloriesBurn by remember { mutableStateOf("0") }
+    var sleepTime by remember { mutableStateOf("0") }
+    var waterGlasses by remember { mutableStateOf("0") }
+    
 
     Box(modifier = Modifier.fillMaxSize().background(backgroundColor)) {
         Column(modifier = Modifier.padding(horizontal = 12.sdp, vertical = 24.sdp).background(backgroundColor)) {
 
             Text(
-                text = "Create User Profile",
+                text = "Setup Daily Goal",
                 fontSize = 28.textSdp,
                 color = darkBlueColor,
                 fontWeight = FontWeight.Bold
             )
             Spacer(Modifier.height(8.sdp))
             Text(
-                text = "We Need your information to help you out to achieve your goals more easily !",
+                text = "Define your ideal steps, sleep, calories, and hydration targets.",
                 fontSize = 14.textSdp,
                 color = primaryColor,
                 fontWeight = FontWeight.Bold
             )
             Spacer(Modifier.height(24.sdp))
 
-            OutlinedTextField(
-                value = name,
-                onValueChange = {
-                    name = it
-                },
-                label = { Text("Full name") },
-                placeholder = { Text("Full name") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = darkBlueColor,     // Border color when focused
-                    unfocusedBorderColor = lightBlueColor, // Border color when not focused
-                    cursorColor = darkBlueColor,          // Cursor color
-                    focusedLabelColor = darkBlueColor,
-                    unfocusedLabelColor = lightBlueColor,
-                    focusedTextColor = darkBlueColor,
-                    unfocusedTextColor = darkBlueColor
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
-                )
-            )
-
-            Spacer(Modifier.height(12.sdp))
 
             OutlinedTextField(
-                value = age,
+                value = stepsPerDayGoal,
                 onValueChange = {
-                    age = it
+                    stepsPerDayGoal= it
                 },
-                label = { Text("Age") },
-                placeholder = { Text("Age") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = darkBlueColor,     // Border color when focused
-                    unfocusedBorderColor = lightBlueColor, // Border color when not focused
-                    cursorColor = darkBlueColor,          // Cursor color
-                    focusedLabelColor = darkBlueColor,
-                    unfocusedLabelColor = lightBlueColor,
-                    focusedTextColor = darkBlueColor,
-                    unfocusedTextColor = darkBlueColor
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Phone, imeAction = ImeAction.Next
-                )
-            )
-
-            Spacer(Modifier.height(12.sdp))
-
-            OutlinedTextField(
-                value = gender,
-                onValueChange = {
-                    gender = it
-                },
-                label = { Text("Gender") },
-                placeholder = { Text("Gender") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = darkBlueColor,     // Border color when focused
-                    unfocusedBorderColor = lightBlueColor, // Border color when not focused
-                    cursorColor = darkBlueColor,          // Cursor color
-                    focusedLabelColor = darkBlueColor,
-                    unfocusedLabelColor = lightBlueColor,
-                    focusedTextColor = darkBlueColor,
-                    unfocusedTextColor = darkBlueColor
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text, imeAction = ImeAction.Next
-                )
-            )
-            Spacer(Modifier.height(12.sdp))
-
-            OutlinedTextField(
-                value = height.toString(),
-                onValueChange = {
-                    height = it
-                },
-                label = { Text("Height") },
-                placeholder = { Text("Height(cm)") },
+                label = { Text("Steps Goal") },
+                placeholder = { Text("Steps (per day)") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
@@ -174,12 +100,84 @@ fun CreateUserProfileScreen(navController: NavHostController) {
             Spacer(Modifier.height(12.sdp))
 
             OutlinedTextField(
-                value = weight.toString(),
+                value = caloriesIntake,
                 onValueChange = {
-                    weight= it
+                    caloriesIntake = it
                 },
-                label = { Text("Weight") },
-                placeholder = { Text("Weight(kg)") },
+                label = { Text("Calories intake") },
+                placeholder = { Text("Calories intake (per day)") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = darkBlueColor,     // Border color when focused
+                    unfocusedBorderColor = lightBlueColor, // Border color when not focused
+                    cursorColor = darkBlueColor,          // Cursor color
+                    focusedLabelColor = darkBlueColor,
+                    unfocusedLabelColor = lightBlueColor,
+                    focusedTextColor = darkBlueColor,
+                    unfocusedTextColor = darkBlueColor
+                ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
+                )
+            )
+            Spacer(Modifier.height(12.sdp))
+
+            OutlinedTextField(
+                value = caloriesBurn.toString(),
+                onValueChange = {
+                    caloriesBurn= it
+                },
+                label = { Text("Calories burn") },
+                placeholder = { Text("Calories burn (per day)") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = darkBlueColor,     // Border color when focused
+                    unfocusedBorderColor = lightBlueColor, // Border color when not focused
+                    cursorColor = darkBlueColor,          // Cursor color
+                    focusedLabelColor = darkBlueColor,
+                    unfocusedLabelColor = lightBlueColor,
+                    focusedTextColor = darkBlueColor,
+                    unfocusedTextColor = darkBlueColor
+                ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
+                )
+            )
+            Spacer(Modifier.height(12.sdp))
+
+            OutlinedTextField(
+                value = waterGlasses,
+                onValueChange = {
+                    waterGlasses= it
+                },
+                label = { Text("Water intake") },
+                placeholder = { Text("Water (glasses per day)") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = darkBlueColor,     // Border color when focused
+                    unfocusedBorderColor = lightBlueColor, // Border color when not focused
+                    cursorColor = darkBlueColor,          // Cursor color
+                    focusedLabelColor = darkBlueColor,
+                    unfocusedLabelColor = lightBlueColor,
+                    focusedTextColor = darkBlueColor,
+                    unfocusedTextColor = darkBlueColor
+                ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
+                )
+            )
+            Spacer(Modifier.height(12.sdp))
+
+            OutlinedTextField(
+                value = sleepTime,
+                onValueChange = {
+                    sleepTime = it
+                },
+                label = { Text("Sleep time") },
+                placeholder = { Text("Sleep(hours per day)") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
@@ -201,7 +199,7 @@ fun CreateUserProfileScreen(navController: NavHostController) {
         ElevatedButton(
             colors = ButtonDefaults.buttonColors(containerColor = darkBlueColor),
             onClick = {
-                navController.navigate(Screens.SETUP_GOAL.name)
+                navController.navigate(Screens.MAIN.name)
             }, modifier = Modifier.align(Alignment.BottomEnd).padding(end = 16.sdp, bottom = 16.sdp)) {
             Text(
                 modifier = Modifier.padding(horizontal = 8.sdp, vertical = 4.sdp),
