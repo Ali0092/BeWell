@@ -62,8 +62,6 @@ fun MainScreen() {
         Manifest.permission.ACTIVITY_RECOGNITION
     )
 
-
-
     Scaffold(topBar = {}, bottomBar = {
         if(state.status.isGranted) {
             BottomNavigationBar(navController)

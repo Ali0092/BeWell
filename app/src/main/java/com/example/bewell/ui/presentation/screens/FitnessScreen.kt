@@ -39,6 +39,10 @@ import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bewell.R
+import com.example.bewell.Utils.FitnessExercises
+import com.example.bewell.Utils.Utils
+import com.example.bewell.Utils.Utils.balancedTrainingExercises
+import com.example.bewell.Utils.Utils.muscleBuildExercises
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor
@@ -132,16 +136,17 @@ fun FitnessScreen(modifier: Modifier = Modifier) {
             modifier = modifier
                 .fillMaxWidth()
                 .align(Alignment.TopStart)
+                .padding(horizontal = 8.sdp)
                 .offset(0.sdp, currentBarSize.toFloat().dp)
         ) {
             item {
-                FitnessScreenBar(title = "Weight Loss", image = R.drawable.fitness1)
+                FitnessScreenBar(title = "Weight Loss", image = R.drawable.fitness1, dataList = Utils.weightLossExercises)
             }
             item {
-                FitnessScreenBar(title = "Build Muscle", image = R.drawable.fitness2)
+                FitnessScreenBar(title = "Build Muscle", image = R.drawable.fitness2, dataList = muscleBuildExercises)
             }
             item {
-                FitnessScreenBar(title = "Balanced Training", image = R.drawable.fitness3)
+                FitnessScreenBar(title = "Balanced Training", image = R.drawable.fitness3, dataList = balancedTrainingExercises)
             }
         }
     }
@@ -149,7 +154,7 @@ fun FitnessScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun FitnessScreenBar(modifier: Modifier = Modifier, title: String, image: Int) {
+fun FitnessScreenBar(modifier: Modifier = Modifier, title: String, image: Int, dataList: List<FitnessExercises>) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -168,15 +173,15 @@ fun FitnessScreenBar(modifier: Modifier = Modifier, title: String, image: Int) {
                 textAlign = TextAlign.Start,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.sdp, bottom = 8.sdp),
+                    .padding(start = 12.sdp, top = 12.sdp, bottom = 8.sdp),
                 color = darkBlueColor,
                 fontSize = 16.textSdp,
                 fontWeight = FontWeight.Bold
             )
 
-            LazyRow(modifier = Modifier.fillMaxWidth()) {
-                items(4) {
-                    FitnessBarSingleItem(image)
+            LazyRow(modifier = Modifier.fillMaxWidth().padding(end = 6.sdp)) {
+                items(10) { index->
+                    FitnessBarSingleItem(title = dataList[index].name, img = dataList[index].image)
                 }
             }
 
@@ -185,13 +190,13 @@ fun FitnessScreenBar(modifier: Modifier = Modifier, title: String, image: Int) {
 }
 
 @Composable
-fun FitnessBarSingleItem(img: Int) {
+fun FitnessBarSingleItem(title:String,img: Int) {
 
     Column(
         modifier = Modifier
             .wrapContentHeight()
             .width(140.sdp)
-            .padding(start = 12.sdp)
+            .padding(start = 12.sdp, top = 8.sdp)
     ) {
         Image(
             painter = painterResource(img),
@@ -203,21 +208,14 @@ fun FitnessBarSingleItem(img: Int) {
         )
         Spacer(modifier = Modifier.height(4.sdp))
         Text(
-            text = "Dumbbell exercise daily 4 times......",
+            text = title,
             textAlign = TextAlign.Start,
             modifier = Modifier.fillMaxWidth(),
             color = darkBlueColor,
             fontSize = 14.textSdp,
             fontWeight = FontWeight.Bold,
-            maxLines = 2
-        )
-        Text(
-            text = "Fitness",
-            textAlign = TextAlign.Start,
-            modifier = Modifier.fillMaxWidth(),
-            color = lightBlueColor,
-            fontSize = 11.textSdp,
-            fontWeight = FontWeight.Bold
+            maxLines = 2,
+            minLines = 2
         )
     }
 

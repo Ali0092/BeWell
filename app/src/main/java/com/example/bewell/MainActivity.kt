@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
             BeWellTheme {
                 NavGraph(
                     navController = rememberNavController(),
-                    startDestination = Screens.ONBOARDING.name
+                    startDestination = Screens.MAIN.name
                 )
             }
         }
