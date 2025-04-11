@@ -5,62 +5,46 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavHostController
+import com.example.bewell.common.OutlinedEditTextField
 import com.example.bewell.common.Screens
 import com.example.bewell.data.datastore.DataStoreManager
+import com.example.bewell.presentation.viewmodel.UserProfileViewModel
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor
 import com.example.bewell.ui.theme.darkBlueColor
-import com.example.bewell.ui.theme.lightBlueColor
 import com.example.bewell.ui.theme.primaryColor
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.get
 
-//UserProfile (store once)
-//- id
-//- name
-//- age
-//- gender
-//- height
-//- weight
-
 @Composable
-fun SetupUserGoal(navController: NavHostController, dataStore: DataStoreManager = get()) {
+fun SetupUserGoal(
+    navController: NavHostController,
+    viewModel: UserProfileViewModel = get(),
+    dataStore: DataStoreManager = get(),
+) {
 
     val coroutineScope = rememberCoroutineScope()
 
-    var stepsPerDayGoal by remember { mutableStateOf("0") }
-    var caloriesIntake by remember { mutableStateOf("0") }
-    var caloriesBurn by remember { mutableStateOf("0") }
-    var sleepTime by remember { mutableStateOf("0") }
-    var waterGlasses by remember { mutableStateOf("0") }
 
-
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(backgroundColor)) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(backgroundColor)
+    ) {
         Column(
             modifier = Modifier
                 .padding(horizontal = 12.sdp, vertical = 24.sdp)
@@ -82,138 +66,64 @@ fun SetupUserGoal(navController: NavHostController, dataStore: DataStoreManager 
             )
             Spacer(Modifier.height(24.sdp))
 
-
-            OutlinedTextField(
-                value = stepsPerDayGoal,
-                onValueChange = {
-                    stepsPerDayGoal = it
-                },
-                label = { Text("Steps Goal") },
-                placeholder = { Text("Steps (per day)") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = darkBlueColor,     // Border color when focused
-                    unfocusedBorderColor = lightBlueColor, // Border color when not focused
-                    cursorColor = darkBlueColor,          // Cursor color
-                    focusedLabelColor = darkBlueColor,
-                    unfocusedLabelColor = lightBlueColor,
-                    focusedTextColor = darkBlueColor,
-                    unfocusedTextColor = darkBlueColor
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
-                )
-            )
+            OutlinedEditTextField(
+                label = "Steps Goal",
+                placeHolder = "Steps (per day)",
+                action = KeyboardType.Number,
+                onValueChanged = { it ->
+                    viewModel.userData.value?.stepsGoal = it.toInt()
+                })
 
             Spacer(Modifier.height(12.sdp))
 
-            OutlinedTextField(
-                value = caloriesIntake,
-                onValueChange = {
-                    caloriesIntake = it
-                },
-                label = { Text("Calories intake") },
-                placeholder = { Text("Calories intake (per day)") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = darkBlueColor,     // Border color when focused
-                    unfocusedBorderColor = lightBlueColor, // Border color when not focused
-                    cursorColor = darkBlueColor,          // Cursor color
-                    focusedLabelColor = darkBlueColor,
-                    unfocusedLabelColor = lightBlueColor,
-                    focusedTextColor = darkBlueColor,
-                    unfocusedTextColor = darkBlueColor
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
-                )
-            )
+            OutlinedEditTextField(
+                label = "Calories intake",
+                placeHolder = "Calories intake (per day)",
+                action = KeyboardType.Number,
+                onValueChanged = { it ->
+                    viewModel.userData.value?.caloriesIntake = it.toInt()
+                })
+
             Spacer(Modifier.height(12.sdp))
 
-            OutlinedTextField(
-                value = caloriesBurn.toString(),
-                onValueChange = {
-                    caloriesBurn = it
-                },
-                label = { Text("Calories burn") },
-                placeholder = { Text("Calories burn (per day)") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = darkBlueColor,     // Border color when focused
-                    unfocusedBorderColor = lightBlueColor, // Border color when not focused
-                    cursorColor = darkBlueColor,          // Cursor color
-                    focusedLabelColor = darkBlueColor,
-                    unfocusedLabelColor = lightBlueColor,
-                    focusedTextColor = darkBlueColor,
-                    unfocusedTextColor = darkBlueColor
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
-                )
-            )
+            OutlinedEditTextField(
+                label = "Calories burn",
+                placeHolder = "Calories burn (per day)",
+                action = KeyboardType.Number,
+                onValueChanged = { it ->
+                    viewModel.userData.value?.caloriesBurnedTarget = it.toInt()
+                })
+
             Spacer(Modifier.height(12.sdp))
 
-            OutlinedTextField(
-                value = waterGlasses,
-                onValueChange = {
-                    waterGlasses = it
-                },
-                label = { Text("Water intake") },
-                placeholder = { Text("Water (glasses per day)") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = darkBlueColor,     // Border color when focused
-                    unfocusedBorderColor = lightBlueColor, // Border color when not focused
-                    cursorColor = darkBlueColor,          // Cursor color
-                    focusedLabelColor = darkBlueColor,
-                    unfocusedLabelColor = lightBlueColor,
-                    focusedTextColor = darkBlueColor,
-                    unfocusedTextColor = darkBlueColor
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
-                )
-            )
+            OutlinedEditTextField(
+                label = "Water intake",
+                placeHolder = "Water (glasses per day)",
+                action = KeyboardType.Number,
+                onValueChanged = { it ->
+                    viewModel.userData.value?.waterIntake = it.toInt()
+                })
+
             Spacer(Modifier.height(12.sdp))
 
-            OutlinedTextField(
-                value = sleepTime,
-                onValueChange = {
-                    sleepTime = it
-                },
-                label = { Text("Sleep time") },
-                placeholder = { Text("Sleep(hours per day)") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = darkBlueColor,     // Border color when focused
-                    unfocusedBorderColor = lightBlueColor, // Border color when not focused
-                    cursorColor = darkBlueColor,          // Cursor color
-                    focusedLabelColor = darkBlueColor,
-                    unfocusedLabelColor = lightBlueColor,
-                    focusedTextColor = darkBlueColor,
-                    unfocusedTextColor = darkBlueColor
-                ),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
-                )
-            )
+            OutlinedEditTextField(
+                label = "Sleep time",
+                placeHolder = "Sleep(hours per day)",
+                action = KeyboardType.Number,
+                onValueChanged = { it ->
+                    viewModel.userData.value?.sleepTime = it.toInt()
+                })
 
         }
 
         ElevatedButton(
-            colors = ButtonDefaults.buttonColors(containerColor = darkBlueColor),
-            onClick = {
+            colors = ButtonDefaults.buttonColors(containerColor = darkBlueColor), onClick = {
                 coroutineScope.launch {
                     dataStore.saveBooleanPref(DataStoreManager.USER_PROFILE_DONE_KEY, true)
                 }
+                viewModel.createUserProfile()
                 navController.navigate(Screens.MAIN.name)
-            },
-            modifier = Modifier
+            }, modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 16.sdp, bottom = 16.sdp)
         ) {

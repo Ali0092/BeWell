@@ -7,12 +7,19 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -22,6 +29,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -32,14 +41,56 @@ import com.example.bewell.ui.theme.darkPurpleColor
 import com.example.bewell.ui.theme.lightBlueColor
 
 @Composable
-fun LinearProgressBar(modifier: Modifier = Modifier, text: String, progressBackgroundColor: Color, progressColor: Color , progressIndicatorTextColor: Color) {
+fun OutlinedEditTextField(
+    modifier: Modifier = Modifier,
+    label: String,
+    placeHolder: String,
+    action: KeyboardType = KeyboardType.Number,
+    imeAction: ImeAction = ImeAction.Next,
+    onValueChanged: (String) -> Unit,
+) {
+
+    var textString by remember { mutableStateOf("") }
+
+    OutlinedTextField(
+        value = textString,
+        onValueChange = {
+            textString = it
+            onValueChanged(it)
+        },
+        label = { Text(label) },
+        placeholder = { Text(placeHolder) },
+        modifier = modifier.fillMaxWidth(),
+        singleLine = true,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = darkBlueColor,     // Border color when focused
+            unfocusedBorderColor = lightBlueColor, // Border color when not focused
+            cursorColor = darkBlueColor,          // Cursor color
+            focusedLabelColor = darkBlueColor,
+            unfocusedLabelColor = lightBlueColor,
+            focusedTextColor = darkBlueColor,
+            unfocusedTextColor = darkBlueColor
+        ),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = action, imeAction = imeAction
+        )
+    )
+
+}
+
+@Composable
+fun LinearProgressBar(
+    modifier: Modifier = Modifier,
+    text: String,
+    progressBackgroundColor: Color,
+    progressColor: Color,
+    progressIndicatorTextColor: Color,
+) {
 
     val textMeasurer = rememberTextMeasurer()
 
     val style = TextStyle(
-        fontSize = 14.textSdp,
-        color = progressIndicatorTextColor,
-        fontWeight = FontWeight.Bold
+        fontSize = 14.textSdp, color = progressIndicatorTextColor, fontWeight = FontWeight.Bold
     )
 
     remember(text, style) {
@@ -49,8 +100,7 @@ fun LinearProgressBar(modifier: Modifier = Modifier, text: String, progressBackg
     Box(
         modifier = modifier
             .fillMaxHeight()
-            .width(100.sdp),
-        contentAlignment = Alignment.Center
+            .width(100.sdp), contentAlignment = Alignment.Center
     ) {
         Canvas(
             modifier = Modifier.fillMaxSize()
