@@ -12,6 +12,7 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -21,21 +22,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import com.example.bewell.R
 import com.example.bewell.common.Screens
+import com.example.bewell.data.datastore.DataStoreManager
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor
 import com.example.bewell.ui.theme.darkBlueColor
 import com.example.bewell.ui.theme.primaryColor
+import kotlinx.coroutines.launch
+import org.koin.androidx.compose.get
 
 @Composable
-fun OnboardingScreen(modifier: Modifier = Modifier, navController: NavHostController) {
+fun OnboardingScreen(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    dataStore: DataStoreManager = get(),
+) {
+
+    val coroutineScope = rememberCoroutineScope()
+
     Surface(color = backgroundColor, modifier = modifier.fillMaxSize()) {
         Box(
             modifier = Modifier.padding(
-                start = 16.sdp,
-                end = 16.sdp,
-                top = 24.sdp,
-                bottom = 16.sdp
+                start = 16.sdp, end = 16.sdp, top = 24.sdp, bottom = 16.sdp
             )
         ) {
             Column {
@@ -70,8 +78,13 @@ fun OnboardingScreen(modifier: Modifier = Modifier, navController: NavHostContro
             ElevatedButton(
                 colors = ButtonDefaults.buttonColors(containerColor = darkBlueColor),
                 onClick = {
-                navController.navigate(Screens.CREATE_PROFILE.name)
-            }, modifier = Modifier.align(Alignment.BottomEnd)) {
+                    coroutineScope.launch {
+                        dataStore.saveBooleanPref(DataStoreManager.ON_BOARDING_DONE_KEY, true)
+                    }
+                    navController.navigate(Screens.CREATE_PROFILE.name)
+                },
+                modifier = Modifier.align(Alignment.BottomEnd)
+            ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 8.sdp, vertical = 4.sdp),
                     text = "Continue",

@@ -9,11 +9,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.example.bewell.common.NavGraph
 import com.example.bewell.common.Screens
+import com.example.bewell.data.datastore.DataStoreManager
 import com.example.bewell.ui.theme.BeWellTheme
 import com.example.bewell.presentation.viewmodel.StepsCounterViewModel
+import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity(), SensorEventListener {
@@ -29,12 +35,38 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
 
+        installSplashScreen().setKeepOnScreenCondition {
+            viewModel.isSplashLoading.value //show until this is true
+        }
+
         setContent {
             BeWellTheme {
-                NavGraph(
-                    navController = rememberNavController(),
-                    startDestination = Screens.ONBOARDING.name
-                )
+
+                val dataStore: DataStoreManager = get()
+                val navController = rememberNavController()
+
+                val isOnBoardingDone = dataStore.getSavedBooleanPref(DataStoreManager.ON_BOARDING_DONE_KEY).collectAsState(initial = null)
+                val isUserProfileDone = dataStore.getSavedBooleanPref(DataStoreManager.USER_PROFILE_DONE_KEY).collectAsState(initial = null)
+
+                val startDestination = remember { mutableStateOf<String?>(null) }
+
+                if (isOnBoardingDone.value!=null && isUserProfileDone.value!=null) {
+                    startDestination.value = when {
+                        isOnBoardingDone.value == true && isUserProfileDone.value == true -> Screens.MAIN.name
+                        isOnBoardingDone.value == true -> Screens.CREATE_PROFILE.name
+                        else -> Screens.ONBOARDING.name
+                    }
+                    viewModel.setSplashLoadingStatus(false)
+                }
+
+                if (startDestination.value==null) {
+                    viewModel.setSplashLoadingStatus(true)
+                }else {
+                    NavGraph(
+                        navController = navController,
+                        startDestination = startDestination.value!!
+                    )
+                }
             }
         }
     }

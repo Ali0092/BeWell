@@ -13,14 +13,12 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,12 +28,15 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavHostController
 import com.example.bewell.common.Screens
+import com.example.bewell.data.datastore.DataStoreManager
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor
 import com.example.bewell.ui.theme.darkBlueColor
 import com.example.bewell.ui.theme.lightBlueColor
 import com.example.bewell.ui.theme.primaryColor
+import kotlinx.coroutines.launch
+import org.koin.androidx.compose.get
 
 //UserProfile (store once)
 //- id
@@ -46,17 +47,25 @@ import com.example.bewell.ui.theme.primaryColor
 //- weight
 
 @Composable
-fun SetupUserGoal(navController: NavHostController) {
+fun SetupUserGoal(navController: NavHostController, dataStore: DataStoreManager = get()) {
+
+    val coroutineScope = rememberCoroutineScope()
 
     var stepsPerDayGoal by remember { mutableStateOf("0") }
     var caloriesIntake by remember { mutableStateOf("0") }
     var caloriesBurn by remember { mutableStateOf("0") }
     var sleepTime by remember { mutableStateOf("0") }
     var waterGlasses by remember { mutableStateOf("0") }
-    
 
-    Box(modifier = Modifier.fillMaxSize().background(backgroundColor)) {
-        Column(modifier = Modifier.padding(horizontal = 12.sdp, vertical = 24.sdp).background(backgroundColor)) {
+
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(backgroundColor)) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 12.sdp, vertical = 24.sdp)
+                .background(backgroundColor)
+        ) {
 
             Text(
                 text = "Setup Daily Goal",
@@ -77,7 +86,7 @@ fun SetupUserGoal(navController: NavHostController) {
             OutlinedTextField(
                 value = stepsPerDayGoal,
                 onValueChange = {
-                    stepsPerDayGoal= it
+                    stepsPerDayGoal = it
                 },
                 label = { Text("Steps Goal") },
                 placeholder = { Text("Steps (per day)") },
@@ -126,7 +135,7 @@ fun SetupUserGoal(navController: NavHostController) {
             OutlinedTextField(
                 value = caloriesBurn.toString(),
                 onValueChange = {
-                    caloriesBurn= it
+                    caloriesBurn = it
                 },
                 label = { Text("Calories burn") },
                 placeholder = { Text("Calories burn (per day)") },
@@ -150,7 +159,7 @@ fun SetupUserGoal(navController: NavHostController) {
             OutlinedTextField(
                 value = waterGlasses,
                 onValueChange = {
-                    waterGlasses= it
+                    waterGlasses = it
                 },
                 label = { Text("Water intake") },
                 placeholder = { Text("Water (glasses per day)") },
@@ -199,8 +208,15 @@ fun SetupUserGoal(navController: NavHostController) {
         ElevatedButton(
             colors = ButtonDefaults.buttonColors(containerColor = darkBlueColor),
             onClick = {
+                coroutineScope.launch {
+                    dataStore.saveBooleanPref(DataStoreManager.USER_PROFILE_DONE_KEY, true)
+                }
                 navController.navigate(Screens.MAIN.name)
-            }, modifier = Modifier.align(Alignment.BottomEnd).padding(end = 16.sdp, bottom = 16.sdp)) {
+            },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 16.sdp, bottom = 16.sdp)
+        ) {
             Text(
                 modifier = Modifier.padding(horizontal = 8.sdp, vertical = 4.sdp),
                 text = "Continue",

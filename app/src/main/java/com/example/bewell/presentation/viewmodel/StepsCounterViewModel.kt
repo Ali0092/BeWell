@@ -12,8 +12,12 @@ class StepsCounterViewModel: ViewModel() {
     private var _calories: MutableStateFlow<Int> = MutableStateFlow<Int>(0)
     val calories: StateFlow<Int> = _calories
 
+    private val _isSplashLoading = MutableStateFlow(true)
+    val isSplashLoading: StateFlow<Boolean> = _isSplashLoading
+
     init {
         _counter.value = 0
+        _isSplashLoading.value = false
     }
 
     fun incrementCounter() {
@@ -24,6 +28,10 @@ class StepsCounterViewModel: ViewModel() {
 
     private fun calculateCalories() {
         _calories.value = (_counter.value * 65 * 0.0005f).toInt()
+    }
+
+    fun setSplashLoadingStatus(status: Boolean) {
+        _isSplashLoading.value = status
     }
 
 }
