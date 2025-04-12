@@ -1,5 +1,6 @@
 package com.example.bewell.presentation.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -118,11 +119,13 @@ fun SetupUserGoal(
 
         ElevatedButton(
             colors = ButtonDefaults.buttonColors(containerColor = darkBlueColor), onClick = {
-                coroutineScope.launch {
-                    dataStore.saveBooleanPref(DataStoreManager.USER_PROFILE_DONE_KEY, true)
-                }
+//                coroutineScope.launch {
+//                    dataStore.saveBooleanPref(DataStoreManager.USER_PROFILE_DONE_KEY, true)
+//                }
+                Log.d("checkingouttheUserProfile", "createUserProfile: button clicked.....  ${viewModel.userData.value}.")
+
                 viewModel.createUserProfile()
-                navController.navigate(Screens.MAIN.name)
+//                navController.navigate(Screens.MAIN.name)
             }, modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 16.sdp, bottom = 16.sdp)

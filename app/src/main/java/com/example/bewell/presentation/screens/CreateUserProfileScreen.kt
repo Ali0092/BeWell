@@ -1,5 +1,6 @@
 package com.example.bewell.presentation.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -102,7 +103,9 @@ fun CreateUserProfileScreen(
                 placeHolder = "Weight(kg)",
                 action = KeyboardType.Number,
                 onValueChanged = { it ->
-                    viewModel.userData.value?.weight = it.toDouble()
+                    viewModel.userData.value.apply {
+                        this!!.weight =  it.toDouble()
+                    }
                 })
 
         }
@@ -110,6 +113,8 @@ fun CreateUserProfileScreen(
         ElevatedButton(
             colors = ButtonDefaults.buttonColors(containerColor = darkBlueColor),
             onClick = {
+                Log.d("checkingouttheUserProfile", "CreateUserProfileScreen.....  ${viewModel.userData.value}.")
+
                 navController.navigate(Screens.SETUP_GOAL.name)
             },
             modifier = Modifier

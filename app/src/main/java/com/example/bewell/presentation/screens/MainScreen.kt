@@ -2,6 +2,7 @@ package com.example.bewell.presentation.screens
 
 import android.Manifest
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -12,6 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -21,16 +23,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bewell.Utils.Utils
 import com.example.bewell.common.BottomNavGraph
+import com.example.bewell.presentation.viewmodel.UserProfileViewModel
 import com.example.bewell.ui.theme.darkBlueColor
 import com.example.bewell.ui.theme.secondaryColor
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-
-
-
-
-
+import org.koin.androidx.compose.get
 
 /*
 *
@@ -56,11 +55,17 @@ FoodItem
 @OptIn(ExperimentalPermissionsApi::class)
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    viewModel: UserProfileViewModel = get()
+) {
     val navController = rememberNavController()
     val state = rememberPermissionState(
-        Manifest.permission.ACTIVITY_RECOGNITION
+        Manifest.permission.ACTIVITY_RECOGNITIONad
     )
+
+    val userProfileData = viewModel.userProfile.collectAsState().value
+
+    Log.d("checkingouttheUserProfile", "MainScreen: ${userProfileData}")
 
     Scaffold(topBar = {}, bottomBar = {
         if(state.status.isGranted) {

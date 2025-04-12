@@ -1,5 +1,6 @@
 package com.example.bewell.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bewell.domain.model.UserProfile
@@ -26,7 +27,7 @@ class UserProfileViewModel(private val userProfileRepository: UserProfileReposit
         viewModelScope.launch {
             _userProfile.value = UserProfileState(isLoading = true)
             userProfileRepository.getUserProfile().collect { userProfile ->
-                if (userProfile.isEmpty()) {
+                if (userProfile.isNotEmpty()) {
                     _userProfile.value = UserProfileState(userProfile = userProfile.first())
                 } else {
                     _userProfile.value = UserProfileState(error = "its error pai")
@@ -38,6 +39,7 @@ class UserProfileViewModel(private val userProfileRepository: UserProfileReposit
     fun createUserProfile() {
         viewModelScope.launch {
             _userData.value?.let { data->
+                Log.d("checkingouttheUserProfile", "createUserProfile: ${data}")
                 userProfileRepository.createUserProfile(data)
             }
         }
