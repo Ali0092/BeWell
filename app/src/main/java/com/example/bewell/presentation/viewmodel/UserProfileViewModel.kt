@@ -12,25 +12,24 @@ import kotlinx.coroutines.launch
 
 class UserProfileViewModel(private val userProfileRepository: UserProfileRepository) : ViewModel() {
 
-    private val _userProfile = MutableStateFlow(UserProfileState())
-    val userProfile: MutableStateFlow<UserProfileState> = _userProfile
+    private val _userProfileData = MutableStateFlow(UserProfileState())
+    val userProfileData: MutableStateFlow<UserProfileState> = _userProfileData
 
-    private val _userData = MutableStateFlow<UserProfile?>(null)
-    val userData: StateFlow<UserProfile?> = _userData
+    private val _userData = MutableStateFlow<UserProfile>(UserProfile())
+    val userData: StateFlow<UserProfile> = _userData
 
     init {
         getUserProfileData()
-        _userData.value = null
     }
 
     private fun getUserProfileData() {
         viewModelScope.launch {
-            _userProfile.value = UserProfileState(isLoading = true)
+            _userProfileData.value = UserProfileState(isLoading = true)
             userProfileRepository.getUserProfile().collect { userProfile ->
                 if (userProfile.isNotEmpty()) {
-                    _userProfile.value = UserProfileState(userProfile = userProfile.first())
+                    _userProfileData.value = UserProfileState(userProfile = userProfile.first())
                 } else {
-                    _userProfile.value = UserProfileState(error = "its error pai")
+                    _userProfileData.value = UserProfileState(error = "its error pai")
                 }
             }
         }
@@ -38,7 +37,7 @@ class UserProfileViewModel(private val userProfileRepository: UserProfileReposit
 
     fun createUserProfile() {
         viewModelScope.launch {
-            _userData.value?.let { data->
+            _userData.value.let { data->
                 Log.d("checkingouttheUserProfile", "createUserProfile: ${data}")
                 userProfileRepository.createUserProfile(data)
             }

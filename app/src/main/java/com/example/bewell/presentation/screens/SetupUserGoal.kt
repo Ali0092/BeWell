@@ -72,7 +72,7 @@ fun SetupUserGoal(
                 placeHolder = "Steps (per day)",
                 action = KeyboardType.Number,
                 onValueChanged = { it ->
-                    viewModel.userData.value?.stepsGoal = it.toInt()
+                    viewModel.userData.value.stepsGoal = it.toInt()
                 })
 
             Spacer(Modifier.height(12.sdp))
@@ -82,7 +82,9 @@ fun SetupUserGoal(
                 placeHolder = "Calories intake (per day)",
                 action = KeyboardType.Number,
                 onValueChanged = { it ->
-                    viewModel.userData.value?.caloriesIntake = it.toInt()
+                    if (it.isNotEmpty()) {
+                        viewModel.userData.value.caloriesIntake = it.toInt()
+                    }
                 })
 
             Spacer(Modifier.height(12.sdp))
@@ -92,7 +94,9 @@ fun SetupUserGoal(
                 placeHolder = "Calories burn (per day)",
                 action = KeyboardType.Number,
                 onValueChanged = { it ->
-                    viewModel.userData.value?.caloriesBurnedTarget = it.toInt()
+                    if (it.isNotEmpty()) {
+                        viewModel.userData.value.caloriesBurnedTarget = it.toInt()
+                    }
                 })
 
             Spacer(Modifier.height(12.sdp))
@@ -102,7 +106,9 @@ fun SetupUserGoal(
                 placeHolder = "Water (glasses per day)",
                 action = KeyboardType.Number,
                 onValueChanged = { it ->
-                    viewModel.userData.value?.waterIntake = it.toInt()
+                    if (it.isNotEmpty()) {
+                        viewModel.userData.value.waterIntake = it.toInt()
+                    }
                 })
 
             Spacer(Modifier.height(12.sdp))
@@ -112,20 +118,21 @@ fun SetupUserGoal(
                 placeHolder = "Sleep(hours per day)",
                 action = KeyboardType.Number,
                 onValueChanged = { it ->
-                    viewModel.userData.value?.sleepTime = it.toInt()
+                    if (it.isNotEmpty()) {
+                        viewModel.userData.value.sleepTime = it.toInt()
+                    }
                 })
 
         }
 
         ElevatedButton(
             colors = ButtonDefaults.buttonColors(containerColor = darkBlueColor), onClick = {
-//                coroutineScope.launch {
-//                    dataStore.saveBooleanPref(DataStoreManager.USER_PROFILE_DONE_KEY, true)
-//                }
+                coroutineScope.launch {
+                    dataStore.saveBooleanPref(DataStoreManager.USER_PROFILE_DONE_KEY, true)
+                }
                 Log.d("checkingouttheUserProfile", "createUserProfile: button clicked.....  ${viewModel.userData.value}.")
-
                 viewModel.createUserProfile()
-//                navController.navigate(Screens.MAIN.name)
+                navController.navigate(Screens.MAIN.name)
             }, modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 16.sdp, bottom = 16.sdp)

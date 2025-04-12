@@ -60,10 +60,10 @@ fun MainScreen(
 ) {
     val navController = rememberNavController()
     val state = rememberPermissionState(
-        Manifest.permission.ACTIVITY_RECOGNITIONad
+        Manifest.permission.ACTIVITY_RECOGNITION
     )
 
-    val userProfileData = viewModel.userProfile.collectAsState().value
+    val userProfileData = viewModel.userProfileData.collectAsState().value
 
     Log.d("checkingouttheUserProfile", "MainScreen: ${userProfileData}")
 
