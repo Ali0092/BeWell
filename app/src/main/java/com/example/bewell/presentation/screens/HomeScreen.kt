@@ -345,7 +345,8 @@ fun HomeScreen(
                             progressBackgroundColor = darkGreenColor,
                             progressColor = lightGreenColor,
                             progressIndicatorTextColor = lightGreenColor,
-                            progressIndicatorText = "10%"
+                            progressIndicatorText = if(userData.userProfile!=null) ((userData.userProfile?.totalCaloriesIntake!!.toFloat()/userData.userProfile.caloriesIntake!!.toFloat())*100f).toString()+"%" else "0%",
+                            progress = if(userData.userProfile!=null) ((userData.userProfile?.totalCaloriesIntake!!.toFloat()/userData.userProfile.caloriesIntake!!.toFloat())*100f) else 0f
                         )//Food
                         Spacer(modifier = Modifier.height(16.sdp))
                         HomeScreenRoutineItem(
@@ -355,7 +356,8 @@ fun HomeScreen(
                             progressBackgroundColor = lightPurpleColor,
                             progressColor = darkPurpleColor,
                             progressIndicatorTextColor = darkPurpleColor,
-                            progressIndicatorText = "20%"
+                            progressIndicatorText = if(userData.userProfile!=null) ((userData.userProfile?.totalWaterIntake!!.toFloat()/userData.userProfile.waterIntake!!.toFloat())*100f).toString()+"%" else "0%",
+                            progress = if(userData.userProfile!=null) ((userData.userProfile?.totalWaterIntake!!.toFloat()/userData.userProfile.waterIntake!!.toFloat())*100f) else 0f
                         )//Sleep
                         Spacer(modifier = Modifier.height(16.sdp))
                         HomeScreenRoutineItem(
@@ -365,7 +367,8 @@ fun HomeScreen(
                             progressBackgroundColor = lightBlueColor,
                             progressColor = darkBlueColor,
                             progressIndicatorTextColor = darkBlueColor,
-                            progressIndicatorText = "Target",
+                            progressIndicatorText = if(userData.userProfile!=null) ((userData.userProfile?.totalSleepOurs!!.toFloat()/userData.userProfile.sleepTime!!.toFloat())*100f).toString()+"%" else "0%",
+                            progress = if(userData.userProfile!=null) ((userData.userProfile?.totalSleepOurs!!.toFloat()/userData.userProfile.sleepTime!!.toFloat())*100f) else 0f,
                             isLastItem = true
                         )//Water
                         Spacer(modifier = Modifier.height(16.sdp)) //temp
@@ -384,6 +387,7 @@ fun HomeScreenRoutineItem(
     icon: Int,
     title: String,
     buttonText: String,
+    progress: Float,
     progressBackgroundColor: Color,
     progressColor: Color,
     progressIndicatorText: String,
@@ -437,7 +441,7 @@ fun HomeScreenRoutineItem(
                 modifier = Modifier.padding(16.sdp),
                 text = progressIndicatorText,
                 progressBackgroundColor = progressBackgroundColor,
-                progress = 23.3f,
+                progress = progress,
                 progressColor = progressColor,
                 progressIndicatorTextColor = progressIndicatorTextColor
             )
