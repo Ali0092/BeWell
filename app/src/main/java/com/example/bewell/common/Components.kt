@@ -1,5 +1,6 @@
 package com.example.bewell.common
 
+import android.util.Log
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -82,6 +83,7 @@ fun OutlinedEditTextField(
 fun LinearProgressBar(
     modifier: Modifier = Modifier,
     text: String,
+    progress: Float,
     progressBackgroundColor: Color,
     progressColor: Color,
     progressIndicatorTextColor: Color,
@@ -125,7 +127,7 @@ fun LinearProgressBar(
             drawLine(
                 color = progressColor,
                 start = Offset(0f, size.height / 2),
-                end = Offset(50f, size.height / 2),
+                end = Offset(progress, size.height / 2),
                 strokeWidth = 15f,
                 cap = StrokeCap.Round
             )
