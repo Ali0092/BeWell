@@ -15,8 +15,8 @@ class UserProfileViewModel(private val userProfileRepository: UserProfileReposit
     private val _userProfileData = MutableStateFlow(UserProfileState())
     val userProfileData: MutableStateFlow<UserProfileState> = _userProfileData
 
-    private val _userData = MutableStateFlow<UserProfile>(UserProfile())
-    val userData: StateFlow<UserProfile> = _userData
+    private val _createUserProfileData = MutableStateFlow<UserProfile>(UserProfile())
+    val createUserProfileData: StateFlow<UserProfile> = _createUserProfileData
 
     init {
         getUserProfileData()
@@ -27,7 +27,7 @@ class UserProfileViewModel(private val userProfileRepository: UserProfileReposit
             _userProfileData.value = UserProfileState(isLoading = true)
             userProfileRepository.getUserProfile().collect { userProfile ->
                 if (userProfile.isNotEmpty()) {
-                    _userProfileData.value = UserProfileState(userProfile = userProfile.first())
+                    _userProfileData.value = UserProfileState(userProfile = userProfile.last())
                 } else {
                     _userProfileData.value = UserProfileState(error = "its error pai")
                 }
@@ -37,8 +37,7 @@ class UserProfileViewModel(private val userProfileRepository: UserProfileReposit
 
     fun createUserProfile() {
         viewModelScope.launch {
-            _userData.value.let { data->
-                Log.d("checkingouttheUserProfile", "createUserProfile: ${data}")
+            _createUserProfileData.value.let { data->
                 userProfileRepository.createUserProfile(data)
             }
         }

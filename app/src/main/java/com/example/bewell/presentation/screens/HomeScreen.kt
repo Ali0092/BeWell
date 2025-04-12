@@ -1,5 +1,9 @@
 package com.example.bewell.presentation.screens
 
+import android.icu.util.Calendar
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -47,6 +52,7 @@ import androidx.compose.ui.unit.sp
 import com.example.bewell.R
 import com.example.bewell.common.CircularProgressBar
 import com.example.bewell.common.LinearProgressBar
+import com.example.bewell.common.getDayOfMonthFromTimestamp
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor
@@ -58,20 +64,31 @@ import com.example.bewell.ui.theme.lightGreenColor
 import com.example.bewell.ui.theme.lightPurpleColor
 import com.example.bewell.ui.theme.secondaryColor
 import com.example.bewell.presentation.viewmodel.StepsCounterViewModel
+import com.example.bewell.presentation.viewmodel.UserProfileViewModel
+import com.example.bewell.presentation.viewstates.UserProfileState
+import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier, viewModel: StepsCounterViewModel = getViewModel()) {
+fun HomeScreen(modifier: Modifier = Modifier, viewModel: StepsCounterViewModel = getViewModel(), userViewModel: UserProfileViewModel = get()) {
 
     val steps = viewModel.counter.collectAsState().value
     val calories = viewModel.calories.collectAsState().value
+    val userProfileData = userViewModel.userProfileData.collectAsState(initial = UserProfileState()).value
+
+    var goalProgress = remember { mutableStateOf(0f) }
 
     var currentBarSize by remember { mutableStateOf(250f) } //current bar size
     val collapseProgress by remember(currentBarSize) {  //collapse progress from 0-1f
         derivedStateOf {
             (250f - currentBarSize) / (250f - 60f)
         }
+    }
+
+    if (userProfileData.userProfile?.stepsGoal != null) {
+        goalProgress.value = (userProfileData.userProfile!!.totalStepsDid.toFloat()+userProfileData.userProfile.totalCaloriesBurned!!.toFloat())/(userProfileData.userProfile.stepsGoal!!.toFloat()+userProfileData.userProfile.caloriesBurnedTarget!!.toFloat())
     }
 
     val nestedScrollConnection = remember {
@@ -110,6 +127,12 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: StepsCounterViewModel =
             }
         }
     }
+
+    /*
+    * 1. Get user profile data and inflate all data on screen
+    * 2. Update all data on screen
+    * 3. Fill the gap dates
+    * */
 
     Box(
         modifier = Modifier
@@ -190,7 +213,7 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: StepsCounterViewModel =
                                         )
                                         Spacer(modifier = Modifier.width(8.sdp))
                                         Text(
-                                            text = "1",
+                                            text = userProfileData.userProfile?.date?.getDayOfMonthFromTimestamp().toString(),
                                             fontSize = 24.textSdp,
                                             color = darkBlueColor,
                                             fontWeight = FontWeight.Bold
@@ -212,14 +235,14 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: StepsCounterViewModel =
                                         )
                                         Spacer(modifier = Modifier.width(8.sdp))
                                         Text(
-                                            text = "${steps}",
+                                            text = steps.toString()+" /",
                                             fontSize = 24.textSdp,
                                             color = darkBlueColor,
                                             fontWeight = FontWeight.Bold
                                         )
                                         Spacer(modifier = Modifier.width(4.sdp))
                                         Text(
-                                            text = "steps",
+                                            text = "${userProfileData.userProfile?.stepsGoal} steps",
                                             fontSize = 14.textSdp,
                                             color = darkPurpleColor,
                                             fontWeight = FontWeight.Normal
@@ -234,14 +257,14 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: StepsCounterViewModel =
                                         )
                                         Spacer(modifier = Modifier.width(8.sdp))
                                         Text(
-                                            text = "${calories}",
+                                            text = calories.toString()+" /",
                                             fontSize = 24.textSdp,
                                             color = darkBlueColor,
                                             fontWeight = FontWeight.Bold
                                         )
                                         Spacer(modifier = Modifier.width(4.sdp))
                                         Text(
-                                            text = "kcal",
+                                            text = "${userProfileData.userProfile?.caloriesBurnedTarget} kcal",
                                             fontSize = 14.textSdp,
                                             color = darkPurpleColor,
                                             fontWeight = FontWeight.Normal
@@ -252,7 +275,7 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: StepsCounterViewModel =
                                 Spacer(modifier.weight(1f))
                                 CircularProgressBar(
                                     modifier = Modifier.padding(16.sdp),
-                                    progress = 0.3f,
+                                    progress = goalProgress.value,
                                     size = 120.sdp,
                                     strokeWidth = 8.sdp
                                 )
@@ -260,7 +283,7 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: StepsCounterViewModel =
 
                         }
                         Spacer(modifier = Modifier.height(16.sdp))
-                        //weekly card
+//                        //weekly card
                         Surface(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -337,16 +360,6 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: StepsCounterViewModel =
                             isLastItem = true
                         )//Water
                         Spacer(modifier = Modifier.height(16.sdp)) //temp
-                        HomeScreenRoutineItem(
-                            icon = R.drawable.sleep_icon,
-                            title = "Sleep",
-                            buttonText = "Add Sleep Time",
-                            progressBackgroundColor = lightBlueColor,
-                            progressColor = darkBlueColor,
-                            progressIndicatorTextColor = darkBlueColor,
-                            progressIndicatorText = "Target",
-                            isLastItem = true
-                        )//Water
                     }
                 }
             }

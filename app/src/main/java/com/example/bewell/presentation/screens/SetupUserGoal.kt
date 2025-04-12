@@ -1,6 +1,6 @@
 package com.example.bewell.presentation.screens
 
-import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,11 +16,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavHostController
 import com.example.bewell.common.OutlinedEditTextField
 import com.example.bewell.common.Screens
+import com.example.bewell.common.Utils.checkIfCanMoveToNext
 import com.example.bewell.data.datastore.DataStoreManager
 import com.example.bewell.presentation.viewmodel.UserProfileViewModel
 import com.example.bewell.ui.sdp
@@ -72,7 +74,7 @@ fun SetupUserGoal(
                 placeHolder = "Steps (per day)",
                 action = KeyboardType.Number,
                 onValueChanged = { it ->
-                    viewModel.userData.value.stepsGoal = it.toInt()
+                    viewModel.createUserProfileData.value.stepsGoal = it.toInt()
                 })
 
             Spacer(Modifier.height(12.sdp))
@@ -83,7 +85,7 @@ fun SetupUserGoal(
                 action = KeyboardType.Number,
                 onValueChanged = { it ->
                     if (it.isNotEmpty()) {
-                        viewModel.userData.value.caloriesIntake = it.toInt()
+                        viewModel.createUserProfileData.value.caloriesIntake = it.toInt()
                     }
                 })
 
@@ -95,7 +97,7 @@ fun SetupUserGoal(
                 action = KeyboardType.Number,
                 onValueChanged = { it ->
                     if (it.isNotEmpty()) {
-                        viewModel.userData.value.caloriesBurnedTarget = it.toInt()
+                        viewModel.createUserProfileData.value.caloriesBurnedTarget = it.toInt()
                     }
                 })
 
@@ -107,7 +109,7 @@ fun SetupUserGoal(
                 action = KeyboardType.Number,
                 onValueChanged = { it ->
                     if (it.isNotEmpty()) {
-                        viewModel.userData.value.waterIntake = it.toInt()
+                        viewModel.createUserProfileData.value.waterIntake = it.toInt()
                     }
                 })
 
@@ -119,20 +121,27 @@ fun SetupUserGoal(
                 action = KeyboardType.Number,
                 onValueChanged = { it ->
                     if (it.isNotEmpty()) {
-                        viewModel.userData.value.sleepTime = it.toInt()
+                        viewModel.createUserProfileData.value.sleepTime = it.toInt()
                     }
                 })
 
         }
 
+        val context = LocalContext.current
+
         ElevatedButton(
             colors = ButtonDefaults.buttonColors(containerColor = darkBlueColor), onClick = {
-                coroutineScope.launch {
-                    dataStore.saveBooleanPref(DataStoreManager.USER_PROFILE_DONE_KEY, true)
+                checkIfCanMoveToNext(screen = 1, userData = viewModel.createUserProfileData.value) { canMove, error ->
+                    if (canMove) {
+                        coroutineScope.launch {
+                            dataStore.saveBooleanPref(DataStoreManager.USER_PROFILE_DONE_KEY, true)
+                        }
+                        viewModel.createUserProfile()
+                        navController.navigate(Screens.MAIN.name)
+                    } else {
+                        Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                    }
                 }
-                Log.d("checkingouttheUserProfile", "createUserProfile: button clicked.....  ${viewModel.userData.value}.")
-                viewModel.createUserProfile()
-                navController.navigate(Screens.MAIN.name)
             }, modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 16.sdp, bottom = 16.sdp)

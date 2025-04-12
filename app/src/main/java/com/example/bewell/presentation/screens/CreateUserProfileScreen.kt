@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavHostController
 import com.example.bewell.common.OutlinedEditTextField
 import com.example.bewell.common.Screens
+import com.example.bewell.common.Utils.checkIfCanMoveToNext
 import com.example.bewell.domain.model.UserProfile
 import com.example.bewell.presentation.viewmodel.UserProfileViewModel
 import com.example.bewell.ui.sdp
@@ -68,7 +69,7 @@ fun CreateUserProfileScreen(
                 placeHolder = "Full name",
                 action = KeyboardType.Text,
                 onValueChanged = { it ->
-                    viewModel.userData.value.name = it
+                    viewModel.createUserProfileData.value.name = it
                 })
 
             Spacer(Modifier.height(12.sdp))
@@ -78,7 +79,7 @@ fun CreateUserProfileScreen(
                 placeHolder = "Age",
                 action = KeyboardType.Phone,
                 onValueChanged = { it ->
-                    viewModel.userData.value.age = it.toInt()
+                    viewModel.createUserProfileData.value.age = it.toInt()
                 })
 
             Spacer(Modifier.height(12.sdp))
@@ -88,7 +89,7 @@ fun CreateUserProfileScreen(
                 placeHolder = "Gender",
                 action = KeyboardType.Text,
                 onValueChanged = { it ->
-                    viewModel.userData.value.gender = it
+                    viewModel.createUserProfileData.value.gender = it
                 })
 
             Spacer(Modifier.height(12.sdp))
@@ -99,7 +100,7 @@ fun CreateUserProfileScreen(
                 action = KeyboardType.Number,
                 onValueChanged = { it ->
                     if (it.isNotEmpty()) {
-                        viewModel.userData.value.height = it.toDouble()
+                        viewModel.createUserProfileData.value.height = it.toDouble()
                     }
                 })
 
@@ -111,7 +112,7 @@ fun CreateUserProfileScreen(
                 action = KeyboardType.Number,
                 onValueChanged = { it ->
                     if (it.isNotEmpty()) {
-                        viewModel.userData.value.weight = it.toDouble()
+                        viewModel.createUserProfileData.value.weight = it.toDouble()
                     }
                 })
 
@@ -121,18 +122,13 @@ fun CreateUserProfileScreen(
 
         ElevatedButton(
             colors = ButtonDefaults.buttonColors(containerColor = darkBlueColor), onClick = {
-                Log.d(
-                    "checkingouttheUserProfile",
-                    "CreateUserProfileScreen.....  ${viewModel.userData.value}."
-                )
-                checkIfCanMoveToNext(viewModel.userData.value) { canMove, error ->
+                checkIfCanMoveToNext(userData = viewModel.createUserProfileData.value) { canMove, error ->
                     if (canMove) {
                         navController.navigate(Screens.SETUP_GOAL.name)
                     } else {
                         Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
                     }
                 }
-
             }, modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 16.sdp, bottom = 16.sdp)
@@ -145,25 +141,5 @@ fun CreateUserProfileScreen(
                 fontWeight = FontWeight.SemiBold
             )
         }
-    }
-}
-
-fun checkIfCanMoveToNext(userData: UserProfile, canMove: (Boolean, String) -> Unit) {
-    if (userData.name == "") {
-        canMove(false, "Please enter your name")
-    }
-    if (userData.age == 0) {
-        canMove(false, "Please enter your age")
-    }
-    if (userData.gender == "") {
-        canMove(false, "Please enter your gender")
-    }
-    if (userData.height == 0.0) {
-        canMove(false, "Please enter your Height")
-    }
-    if (userData.weight == 0.0) {
-        canMove(false, "Please enter your weight")
-    }else {
-        canMove(true, "")
     }
 }

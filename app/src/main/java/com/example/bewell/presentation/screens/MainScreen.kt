@@ -24,6 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.bewell.Utils.Utils
 import com.example.bewell.common.BottomNavGraph
 import com.example.bewell.presentation.viewmodel.UserProfileViewModel
+import com.example.bewell.presentation.viewstates.UserProfileState
 import com.example.bewell.ui.theme.darkBlueColor
 import com.example.bewell.ui.theme.secondaryColor
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -31,41 +32,14 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import org.koin.androidx.compose.get
 
-/*
-*
-
-DailyStats (per day)
-- date (primary key)
-- steps
-- sleepHours
-- waterGlasses
-- caloriesFromSteps (calculated)
-- caloriesFromSleep (optional)
-- foodList: List<FoodItem>
-- caloriesConsumed (sum of food calories)
-
-FoodItem
-- name
-- amount
-- calories
-* */
-
-
-
 @OptIn(ExperimentalPermissionsApi::class)
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun MainScreen(
-    viewModel: UserProfileViewModel = get()
-) {
+fun MainScreen() {
     val navController = rememberNavController()
     val state = rememberPermissionState(
         Manifest.permission.ACTIVITY_RECOGNITION
     )
-
-    val userProfileData = viewModel.userProfileData.collectAsState().value
-
-    Log.d("checkingouttheUserProfile", "MainScreen: ${userProfileData}")
 
     Scaffold(topBar = {}, bottomBar = {
         if(state.status.isGranted) {
