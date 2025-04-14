@@ -12,8 +12,8 @@ class UserProfileRepository(private val userProfileDao: UserProfileDao) {
         userProfileDao.createUserProfile(userProfile)
     }
 
-    suspend fun updateUserProfileData(userProfile: UserProfile) {
-        userProfileDao.updateUserProfileData(userProfile)
+    suspend fun updateStepsGoal(monthId: String , stepsDid: Int) {
+        userProfileDao.updateStepsGoal(monthId,stepsDid)
     }
 
     fun getUserProfile(): Flow<List<UserProfile>> = userProfileDao.getUserProfile()

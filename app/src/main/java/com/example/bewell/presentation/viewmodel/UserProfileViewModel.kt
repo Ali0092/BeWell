@@ -47,6 +47,12 @@ class UserProfileViewModel(private val userProfileRepository: UserProfileReposit
         }
     }
 
+    fun updateStepsGoal(monthId: String , stepsDid: Int) {
+        viewModelScope.launch {
+            userProfileRepository.updateStepsGoal(monthId,stepsDid)
+        }
+    }
+
     fun createUserProfile() {
         viewModelScope.launch {
             _createUserProfileData.value.let { data->

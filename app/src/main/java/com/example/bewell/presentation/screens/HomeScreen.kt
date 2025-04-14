@@ -27,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -81,7 +82,7 @@ fun HomeScreen(
 
     var goalProgress = remember { mutableStateOf(0f) }
     var monthlyTotalSteps = userViewModel.totalStepsEver.collectAsState().value
-    var monthlyAchievedSteps =userViewModel.totalStepsEverDid.collectAsState().value
+    var monthlyAchievedSteps = userViewModel.totalStepsEverDid.collectAsState().value
 
     var currentBarSize by remember { mutableStateOf(250f) } //current bar size
     val collapseProgress by remember(currentBarSize) {  //collapse progress from 0-1f
@@ -91,10 +92,8 @@ fun HomeScreen(
     }
 
     if (userData.userProfile?.stepsGoal != null) {
-        goalProgress.value =
-            (userData.userProfile!!.totalStepsDid.toFloat() + userData.userProfile.totalCaloriesBurned!!.toFloat()) / (userData.userProfile.stepsGoal!!.toFloat() + userData.userProfile.caloriesBurnedTarget!!.toFloat())
+        goalProgress.value = (userData.userProfile!!.totalStepsDid.toFloat() + userData.userProfile.totalCaloriesBurned!!.toFloat()) / (userData.userProfile.stepsGoal!!.toFloat() + userData.userProfile.caloriesBurnedTarget!!.toFloat())
     }
-
 
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
@@ -131,6 +130,10 @@ fun HomeScreen(
                 return Offset(0f, consumed)
             }
         }
+    }
+
+    LaunchedEffect(steps) {
+        userViewModel.updateStepsGoal(userData.userProfile?.id.toString(), userData.userProfile?.totalStepsDid!!+steps)
     }
 
     /*
