@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,10 +17,12 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,12 +46,15 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.bewell.R
 import com.example.bewell.common.CircularProgressBar
 import com.example.bewell.common.LinearProgressBar
+import com.example.bewell.common.OutlinedEditTextField
 import com.example.bewell.common.getDayOfMonthFromTimestamp
 import com.example.bewell.common.valueInThreeDecimalPoints
 import com.example.bewell.presentation.viewmodel.UserProfileViewModel
@@ -84,6 +90,8 @@ fun HomeScreen(
             (250f - currentBarSize) / (250f - 60f)
         }
     }
+
+    var showAddFoodDialog by remember { mutableStateOf(false) }
 
     if (userData.userProfile?.stepsGoal != null) {
         goalProgress.value =
@@ -346,8 +354,10 @@ fun HomeScreen(
                             progressIndicatorTextColor = lightGreenColor,
                             progressIndicatorText = if (userData.userProfile != null) ((userData.userProfile?.totalCaloriesIntake!!.toFloat() / userData.userProfile.caloriesIntake!!.toFloat()) * 100f).valueInThreeDecimalPoints()
                                 .toString() + "%" else "0 %",
-                            progress = if (userData.userProfile != null) ((userData.userProfile?.totalCaloriesIntake!!.toFloat() / userData.userProfile.caloriesIntake!!.toFloat()) * 100f) else 0f
-                        )//Food
+                            progress = if (userData.userProfile != null) ((userData.userProfile?.totalCaloriesIntake!!.toFloat() / userData.userProfile.caloriesIntake!!.toFloat()) * 100f) else 0f,
+                            onButtonClick = {
+                                showAddFoodDialog = true
+                            })//Food
                         Spacer(modifier = Modifier.height(16.sdp))
                         HomeScreenRoutineItem(
                             icon = R.drawable.water_icon,
@@ -358,8 +368,8 @@ fun HomeScreen(
                             progressIndicatorTextColor = darkPurpleColor,
                             progressIndicatorText = if (userData.userProfile != null) ((userData.userProfile?.totalWaterIntake!!.toFloat() / userData.userProfile.waterIntake!!.toFloat()) * 100f).valueInThreeDecimalPoints()
                                 .toString() + " %" else "0 %",
-                            progress = if (userData.userProfile != null) ((userData.userProfile?.totalWaterIntake!!.toFloat() / userData.userProfile.waterIntake!!.toFloat()) * 100f) else 0f
-                        )//Sleep
+                            progress = if (userData.userProfile != null) ((userData.userProfile?.totalWaterIntake!!.toFloat() / userData.userProfile.waterIntake!!.toFloat()) * 100f) else 0f,
+                            onButtonClick = {})//Sleep
                         Spacer(modifier = Modifier.height(16.sdp))
                         HomeScreenRoutineItem(
                             icon = R.drawable.sleep_icon,
@@ -371,8 +381,10 @@ fun HomeScreen(
                             progressIndicatorText = if (userData.userProfile != null) ((userData.userProfile?.totalSleepOurs!!.toFloat() / userData.userProfile.sleepTime!!.toFloat()) * 100f).valueInThreeDecimalPoints()
                                 .toString() + "%" else "0%",
                             progress = if (userData.userProfile != null) ((userData.userProfile?.totalSleepOurs!!.toFloat() / userData.userProfile.sleepTime!!.toFloat()) * 100f) else 0f,
-                            isLastItem = true
-                        )//Water
+                            isLastItem = true,
+                            onButtonClick = {
+
+                            })//Water
                         Spacer(modifier = Modifier.height(16.sdp)) //temp
                     }
                 }
@@ -381,7 +393,11 @@ fun HomeScreen(
 
     }
 
-
+    AddFoodDialog(showDialog = showAddFoodDialog, onDismiss = {
+        showAddFoodDialog = false
+    }) {
+        showAddFoodDialog = false
+    }
 }
 
 @Composable
@@ -396,6 +412,7 @@ fun HomeScreenRoutineItem(
     progressIndicatorTextColor: Color,
     progressIndicatorOffset: Offset = Offset(0f, 0f),
     isLastItem: Boolean = false,
+    onButtonClick: () -> Unit = {},
 ) {
     Surface(
         modifier = Modifier
@@ -428,7 +445,7 @@ fun HomeScreenRoutineItem(
                 ElevatedButton(
                     colors = ButtonDefaults.buttonColors(containerColor = darkBlueColor),
                     onClick = {
-
+                        onButtonClick()
                     }) {
                     Text(
                         modifier = Modifier.padding(horizontal = 4.sdp, vertical = 2.sdp),
@@ -447,6 +464,106 @@ fun HomeScreenRoutineItem(
                 progressColor = progressColor,
                 progressIndicatorTextColor = progressIndicatorTextColor
             )
+        }
+    }
+}
+
+@Composable
+fun AddFoodDialog(
+    showDialog: Boolean, onDismiss: () -> Unit, addFood: () -> Unit,
+) {
+    if (showDialog) {
+        Dialog(onDismissRequest = {
+            onDismiss()
+        }) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .background(secondaryColor, shape = RoundedCornerShape(12.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    modifier = Modifier.padding(vertical = 16.sdp, horizontal = 16.sdp),
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Add Food",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = darkPurpleColor
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = "Add the food with amount of calories and other details",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = lightPurpleColor
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+
+                    OutlinedEditTextField(
+                        label = "Food Name",
+                        placeHolder = "Food Name",
+                        isDarkPurpleColor = true,
+                        action = KeyboardType.Number,
+                        onValueChanged = { it ->
+
+                        })
+
+                    Spacer(Modifier.height(12.sdp))
+
+                    OutlinedEditTextField(
+                        label = "Total Calories",
+                        placeHolder = "Calories consumed",
+                        isDarkPurpleColor = true,
+                        action = KeyboardType.Number,
+                        onValueChanged = { it ->
+
+                        })
+
+                    Spacer(Modifier.height(24.sdp))
+
+                    // Buttons
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        Text(
+                            modifier = Modifier.clickable {
+                                onDismiss()
+                            },
+                            text = "Cancel",
+                            fontSize = 14.textSdp,
+                            color = lightPurpleColor,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        Button(
+                            onClick = {
+                                addFood()
+                                onDismiss()
+                            },
+                            modifier = Modifier.padding(start = 14.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = darkPurpleColor)
+                        ) {
+                            Text(
+                                text = "Add",
+                                color = Color.White,
+                                fontSize = 16.textSdp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

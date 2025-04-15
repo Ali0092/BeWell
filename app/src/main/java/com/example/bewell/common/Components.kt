@@ -40,6 +40,7 @@ import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.darkBlueColor
 import com.example.bewell.ui.theme.darkPurpleColor
 import com.example.bewell.ui.theme.lightBlueColor
+import com.example.bewell.ui.theme.lightPurpleColor
 
 @Composable
 fun OutlinedEditTextField(
@@ -48,6 +49,7 @@ fun OutlinedEditTextField(
     placeHolder: String,
     action: KeyboardType = KeyboardType.Number,
     imeAction: ImeAction = ImeAction.Next,
+    isDarkPurpleColor: Boolean = false,
     onValueChanged: (String) -> Unit,
 ) {
 
@@ -64,13 +66,13 @@ fun OutlinedEditTextField(
         modifier = modifier.fillMaxWidth(),
         singleLine = true,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = darkBlueColor,     // Border color when focused
-            unfocusedBorderColor = lightBlueColor, // Border color when not focused
-            cursorColor = darkBlueColor,          // Cursor color
-            focusedLabelColor = darkBlueColor,
-            unfocusedLabelColor = lightBlueColor,
-            focusedTextColor = darkBlueColor,
-            unfocusedTextColor = darkBlueColor
+            focusedBorderColor = if (isDarkPurpleColor) darkPurpleColor else darkBlueColor,     // Border color when focused
+            unfocusedBorderColor =if (isDarkPurpleColor) lightPurpleColor else  lightBlueColor, // Border color when not focused
+            cursorColor =if (isDarkPurpleColor) darkPurpleColor else  darkBlueColor,          // Cursor color
+            focusedLabelColor =if (isDarkPurpleColor) darkPurpleColor else  darkBlueColor,
+            unfocusedLabelColor =if (isDarkPurpleColor) lightPurpleColor else  lightBlueColor,
+            focusedTextColor =if (isDarkPurpleColor) darkPurpleColor else  darkBlueColor,
+            unfocusedTextColor = if (isDarkPurpleColor) darkPurpleColor else darkBlueColor
         ),
         keyboardOptions = KeyboardOptions(
             keyboardType = action, imeAction = imeAction
