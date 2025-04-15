@@ -149,10 +149,10 @@ fun HomeScreen(
             Log.d("checkingOutTheDifferenceBetweenDates", "HomeScreen: ${userData.userProfile.date.formatDateFromMillis()}")
 
 
-//            userData.userProfile.date.getDateDifferences().forEach { it->
-//                userViewModel.insertNewDay(it)
-//                Log.d("checkingOutTheDifferenceBetweenDates", "difference: ${it.formatDateFromMillis()}")
-//            }
+            userData.userProfile.date.getDateDifferences().forEach { it->
+                userViewModel.insertNewDay(it)
+                Log.d("checkingOutTheDifferenceBetweenDates", "difference: ${it.formatDateFromMillis()}")
+            }
 
 //            userViewModel.userProfileData.value.userProfile!!.date = 1744614000000
 //            userViewModel.updateUserData()

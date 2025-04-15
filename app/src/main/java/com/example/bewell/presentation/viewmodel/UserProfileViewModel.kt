@@ -74,6 +74,7 @@ class UserProfileViewModel(private val userProfileRepository: UserProfileReposit
     fun createUserProfile() {
         viewModelScope.launch {
             _createUserProfileData.value.let { data->
+                data.date = System.currentTimeMillis()
                 userProfileRepository.createUserProfile(data)
             }
         }
@@ -81,7 +82,7 @@ class UserProfileViewModel(private val userProfileRepository: UserProfileReposit
 
     fun insertNewDay(date: Long) {
         viewModelScope.launch {
-            _createUserProfileData.value.let { data->
+            _userProfileData.value.userProfile?.let { data->
                 userProfileRepository.createUserProfile(UserProfile(
                     date = date,
                     name = data.name,
@@ -91,6 +92,7 @@ class UserProfileViewModel(private val userProfileRepository: UserProfileReposit
                     weight = data.weight,
                     stepsGoal = data.stepsGoal,
                     caloriesBurnedTarget = data.caloriesBurnedTarget,
+                    caloriesIntake = data.caloriesIntake,
                     waterIntake = data.waterIntake,
                     sleepTime = data.sleepTime
                 ))
