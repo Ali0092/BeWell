@@ -42,6 +42,8 @@ class UserProfileViewModel(private val userProfileRepository: UserProfileReposit
                         _totalStepsEver.value += it.stepsGoal
                         _totalStepsEverDid.value += it.totalStepsDid
                     }
+                    Log.d("sdfdjhdshsdfhjs", "userData.last(): ${userData.last()}")
+
                     _userProfileData.value = UserProfileState(userProfile = userData.last())
                 } else {
                     _userProfileData.value = UserProfileState(error = "its error pai")
@@ -57,6 +59,14 @@ class UserProfileViewModel(private val userProfileRepository: UserProfileReposit
                 userProfileRepository.updateStepsGoal(monthId = it.id.toString(), stepsDid = it.totalStepsDid+1, calories =  calculateCalories(it.totalStepsDid+1))
             }?: kotlin.run {
                 Log.d("checkingBeWellData", "userProfileData: its null no data")
+            }
+        }
+    }
+
+    fun updateUserData() {
+        viewModelScope.launch {
+            _userProfileData.value.userProfile?.let {
+                userProfileRepository.updateUserData(it)
             }
         }
     }

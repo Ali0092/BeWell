@@ -1,6 +1,8 @@
 package com.example.bewell.presentation.screens
 
 import android.os.Build
+import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -44,6 +46,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -91,7 +94,15 @@ fun HomeScreen(
         }
     }
 
-    var showAddFoodDialog by remember { mutableStateOf(false) }
+    var showAdFoodDialog by remember { mutableStateOf(false) }
+    var showAddWaterDialog by remember { mutableStateOf(false) }
+    var showAdSleepDialog by remember { mutableStateOf(false) }
+
+    var dialogTitle by remember { mutableStateOf("") }
+    var dialogSubTitle by remember { mutableStateOf("") }
+    var dialogEtLable by remember { mutableStateOf("") }
+
+
 
     if (userData.userProfile?.stepsGoal != null) {
         goalProgress.value =
@@ -356,7 +367,10 @@ fun HomeScreen(
                                 .toString() + "%" else "0 %",
                             progress = if (userData.userProfile != null) ((userData.userProfile?.totalCaloriesIntake!!.toFloat() / userData.userProfile.caloriesIntake!!.toFloat()) * 100f) else 0f,
                             onButtonClick = {
-                                showAddFoodDialog = true
+                                showAdFoodDialog = true
+                                dialogTitle = "Add Food"
+                                dialogSubTitle = "Add Consumed calories"
+                                dialogEtLable = "Enter food"
                             })//Food
                         Spacer(modifier = Modifier.height(16.sdp))
                         HomeScreenRoutineItem(
@@ -369,7 +383,12 @@ fun HomeScreen(
                             progressIndicatorText = if (userData.userProfile != null) ((userData.userProfile?.totalWaterIntake!!.toFloat() / userData.userProfile.waterIntake!!.toFloat()) * 100f).valueInThreeDecimalPoints()
                                 .toString() + " %" else "0 %",
                             progress = if (userData.userProfile != null) ((userData.userProfile?.totalWaterIntake!!.toFloat() / userData.userProfile.waterIntake!!.toFloat()) * 100f) else 0f,
-                            onButtonClick = {})//Sleep
+                            onButtonClick = {
+                                showAddWaterDialog = true
+                                dialogTitle = "Add Water"
+                                dialogSubTitle = "Add Consumed water in glasses"
+                                dialogEtLable = "Water Glasses"
+                            })//Water
                         Spacer(modifier = Modifier.height(16.sdp))
                         HomeScreenRoutineItem(
                             icon = R.drawable.sleep_icon,
@@ -383,8 +402,11 @@ fun HomeScreen(
                             progress = if (userData.userProfile != null) ((userData.userProfile?.totalSleepOurs!!.toFloat() / userData.userProfile.sleepTime!!.toFloat()) * 100f) else 0f,
                             isLastItem = true,
                             onButtonClick = {
-
-                            })//Water
+                                showAdSleepDialog = true
+                                dialogTitle = "Add Sleep time"
+                                dialogSubTitle = "Add Sleep time in hours"
+                                dialogEtLable = "Sleep time"
+                            })//Sleep
                         Spacer(modifier = Modifier.height(16.sdp)) //temp
                     }
                 }
@@ -393,11 +415,57 @@ fun HomeScreen(
 
     }
 
-    AddFoodDialog(showDialog = showAddFoodDialog, onDismiss = {
-        showAddFoodDialog = false
-    }) {
-        showAddFoodDialog = false
-    }
+
+    AddSleepAndWaterDialog(
+        showDialog = showAdFoodDialog,
+        title = dialogTitle,
+        subtitle = dialogSubTitle,
+        etLabel = dialogEtLable,
+        etPlaceHolder = dialogEtLable,
+        onDismiss =  {
+            showAdFoodDialog = false
+        },
+        add = { data->
+            showAdFoodDialog = false
+            userViewModel.userProfileData.value.userProfile!!.totalCaloriesIntake = userViewModel.userProfileData.value.userProfile!!.totalCaloriesIntake!!+data
+            userViewModel.updateUserData()
+        },
+    )
+
+
+    AddSleepAndWaterDialog(
+        showDialog = showAddWaterDialog,
+        title = dialogTitle,
+        subtitle = dialogSubTitle,
+        etLabel = dialogEtLable,
+        etPlaceHolder = dialogEtLable,
+        onDismiss =  {
+            showAddWaterDialog = false
+        },
+        add = { data ->
+            showAddWaterDialog = false
+            userViewModel.userProfileData.value.userProfile!!.totalWaterIntake = userViewModel.userProfileData.value.userProfile!!.totalWaterIntake!!+data
+            userViewModel.updateUserData()
+        },
+    )
+
+    AddSleepAndWaterDialog(
+        showDialog = showAdSleepDialog,
+        title = dialogTitle,
+        subtitle = dialogSubTitle,
+        etLabel = dialogEtLable,
+        etPlaceHolder = dialogEtLable,
+        onDismiss =  {
+            showAdSleepDialog = false
+        },
+        add = { data ->
+            showAdSleepDialog = false
+            userViewModel.userProfileData.value.userProfile!!.totalSleepOurs = userViewModel.userProfileData.value.userProfile!!.totalSleepOurs!!+data
+
+            userViewModel.updateUserData()
+        },
+    )
+
 }
 
 @Composable
@@ -469,9 +537,19 @@ fun HomeScreenRoutineItem(
 }
 
 @Composable
-fun AddFoodDialog(
-    showDialog: Boolean, onDismiss: () -> Unit, addFood: () -> Unit,
+fun AddSleepAndWaterDialog(
+    showDialog: Boolean,
+    title: String,
+    subtitle: String,
+    etLabel: String,
+    etPlaceHolder: String,
+    onDismiss: () -> Unit,
+    add: (Int) -> Unit,
 ) {
+
+    var text by remember { mutableStateOf("") }
+    val context = LocalContext.current
+
     if (showDialog) {
         Dialog(onDismissRequest = {
             onDismiss()
@@ -489,7 +567,7 @@ fun AddFoodDialog(
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Add Food",
+                        text = title,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = darkPurpleColor
@@ -498,7 +576,7 @@ fun AddFoodDialog(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Text(
-                        text = "Add the food with amount of calories and other details",
+                        text = subtitle,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = lightPurpleColor
@@ -508,23 +586,12 @@ fun AddFoodDialog(
 
 
                     OutlinedEditTextField(
-                        label = "Food Name",
-                        placeHolder = "Food Name",
+                        label = etLabel,
+                        placeHolder = etPlaceHolder,
                         isDarkPurpleColor = true,
                         action = KeyboardType.Number,
                         onValueChanged = { it ->
-
-                        })
-
-                    Spacer(Modifier.height(12.sdp))
-
-                    OutlinedEditTextField(
-                        label = "Total Calories",
-                        placeHolder = "Calories consumed",
-                        isDarkPurpleColor = true,
-                        action = KeyboardType.Number,
-                        onValueChanged = { it ->
-
+                            text = it
                         })
 
                     Spacer(Modifier.height(24.sdp))
@@ -548,8 +615,12 @@ fun AddFoodDialog(
 
                         Button(
                             onClick = {
-                                addFood()
-                                onDismiss()
+                                if (text.isNotEmpty()) {
+                                    add(text.toInt())
+                                    onDismiss()
+                                } else  {
+                                    Toast.makeText(context, "Data must be filled ", Toast.LENGTH_SHORT).show()
+                                }
                             },
                             modifier = Modifier.padding(start = 14.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = darkPurpleColor)
