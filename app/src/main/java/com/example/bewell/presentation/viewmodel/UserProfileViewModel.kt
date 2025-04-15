@@ -79,6 +79,25 @@ class UserProfileViewModel(private val userProfileRepository: UserProfileReposit
         }
     }
 
+    fun insertNewDay(date: Long) {
+        viewModelScope.launch {
+            _createUserProfileData.value.let { data->
+                userProfileRepository.createUserProfile(UserProfile(
+                    date = date,
+                    name = data.name,
+                    age = data.age,
+                    gender = data.gender,
+                    height = data.height,
+                    weight = data.weight,
+                    stepsGoal = data.stepsGoal,
+                    caloriesBurnedTarget = data.caloriesBurnedTarget,
+                    waterIntake = data.waterIntake,
+                    sleepTime = data.sleepTime
+                ))
+            }
+        }
+    }
+
     private fun calculateCalories(steps: Int): Int {
         return (steps * 65 * 0.0005f).toInt()
     }

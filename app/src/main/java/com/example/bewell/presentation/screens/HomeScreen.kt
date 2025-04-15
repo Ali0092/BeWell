@@ -32,6 +32,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -58,6 +59,8 @@ import com.example.bewell.R
 import com.example.bewell.common.CircularProgressBar
 import com.example.bewell.common.LinearProgressBar
 import com.example.bewell.common.OutlinedEditTextField
+import com.example.bewell.common.formatDateFromMillis
+import com.example.bewell.common.getDateDifferences
 import com.example.bewell.common.getDayOfMonthFromTimestamp
 import com.example.bewell.common.valueInThreeDecimalPoints
 import com.example.bewell.presentation.viewmodel.UserProfileViewModel
@@ -102,13 +105,6 @@ fun HomeScreen(
     var dialogSubTitle by remember { mutableStateOf("") }
     var dialogEtLable by remember { mutableStateOf("") }
 
-
-
-    if (userData.userProfile?.stepsGoal != null) {
-        goalProgress.value =
-            (userData.userProfile!!.totalStepsDid.toFloat() + userData.userProfile.totalCaloriesBurned!!.toFloat()) / (userData.userProfile.stepsGoal!!.toFloat() + userData.userProfile.caloriesBurnedTarget!!.toFloat())
-    }
-
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override suspend fun onPostFling(
@@ -146,9 +142,25 @@ fun HomeScreen(
         }
     }
 
-//    LaunchedEffect(steps) {
-//        userViewModel.updateStepsGoal(userData.userProfile?.id.toString(), userData.userProfile?.totalStepsDid!!+steps)
-//    }
+    LaunchedEffect(userData) {
+
+        if (userData.userProfile?.stepsGoal != null) {
+
+            Log.d("checkingOutTheDifferenceBetweenDates", "HomeScreen: ${userData.userProfile.date.formatDateFromMillis()}")
+
+
+//            userData.userProfile.date.getDateDifferences().forEach { it->
+//                userViewModel.insertNewDay(it)
+//                Log.d("checkingOutTheDifferenceBetweenDates", "difference: ${it.formatDateFromMillis()}")
+//            }
+
+//            userViewModel.userProfileData.value.userProfile!!.date = 1744614000000
+//            userViewModel.updateUserData()
+
+            goalProgress.value =
+                (userData.userProfile!!.totalStepsDid.toFloat() + userData.userProfile.totalCaloriesBurned!!.toFloat()) / (userData.userProfile.stepsGoal!!.toFloat() + userData.userProfile.caloriesBurnedTarget!!.toFloat())
+        }
+    }
 
     /*
     * 1. Get user profile data and inflate all data on screen
