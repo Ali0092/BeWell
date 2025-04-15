@@ -27,7 +27,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -51,7 +50,7 @@ import com.example.bewell.R
 import com.example.bewell.common.CircularProgressBar
 import com.example.bewell.common.LinearProgressBar
 import com.example.bewell.common.getDayOfMonthFromTimestamp
-import com.example.bewell.presentation.viewmodel.StepsCounterViewModel
+import com.example.bewell.common.valueInThreeDecimalPoints
 import com.example.bewell.presentation.viewmodel.UserProfileViewModel
 import com.example.bewell.presentation.viewstates.UserProfileState
 import com.example.bewell.ui.sdp
@@ -65,21 +64,16 @@ import com.example.bewell.ui.theme.lightGreenColor
 import com.example.bewell.ui.theme.lightPurpleColor
 import com.example.bewell.ui.theme.secondaryColor
 import org.koin.androidx.compose.get
-import org.koin.androidx.compose.getViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: StepsCounterViewModel = getViewModel(),
     userViewModel: UserProfileViewModel = get(),
 ) {
 
-    val steps = viewModel.counter.collectAsState().value
-    val calories = viewModel.calories.collectAsState().value
     val userData = userViewModel.userProfileData.collectAsState(initial = UserProfileState()).value
-
     var goalProgress = remember { mutableStateOf(0f) }
     var monthlyTotalSteps = userViewModel.totalStepsEver.collectAsState().value
     var monthlyAchievedSteps = userViewModel.totalStepsEverDid.collectAsState().value
@@ -92,7 +86,8 @@ fun HomeScreen(
     }
 
     if (userData.userProfile?.stepsGoal != null) {
-        goalProgress.value = (userData.userProfile!!.totalStepsDid.toFloat() + userData.userProfile.totalCaloriesBurned!!.toFloat()) / (userData.userProfile.stepsGoal!!.toFloat() + userData.userProfile.caloriesBurnedTarget!!.toFloat())
+        goalProgress.value =
+            (userData.userProfile!!.totalStepsDid.toFloat() + userData.userProfile.totalCaloriesBurned!!.toFloat()) / (userData.userProfile.stepsGoal!!.toFloat() + userData.userProfile.caloriesBurnedTarget!!.toFloat())
     }
 
     val nestedScrollConnection = remember {
@@ -132,9 +127,9 @@ fun HomeScreen(
         }
     }
 
-    LaunchedEffect(steps) {
-        userViewModel.updateStepsGoal(userData.userProfile?.id.toString(), userData.userProfile?.totalStepsDid!!+steps)
-    }
+//    LaunchedEffect(steps) {
+//        userViewModel.updateStepsGoal(userData.userProfile?.id.toString(), userData.userProfile?.totalStepsDid!!+steps)
+//    }
 
     /*
     * 1. Get user profile data and inflate all data on screen
@@ -246,7 +241,7 @@ fun HomeScreen(
                                         )
                                         Spacer(modifier = Modifier.width(8.sdp))
                                         Text(
-                                            text = steps.toString() + " /",
+                                            text = userData.userProfile?.totalStepsDid.toString() + " /",
                                             fontSize = 24.textSdp,
                                             color = darkBlueColor,
                                             fontWeight = FontWeight.Bold
@@ -268,7 +263,7 @@ fun HomeScreen(
                                         )
                                         Spacer(modifier = Modifier.width(8.sdp))
                                         Text(
-                                            text = calories.toString() + " /",
+                                            text = userData.userProfile?.totalCaloriesBurned.toString() + " /",
                                             fontSize = 24.textSdp,
                                             color = darkBlueColor,
                                             fontWeight = FontWeight.Bold
@@ -294,15 +289,15 @@ fun HomeScreen(
 
                         }
                         Spacer(modifier = Modifier.height(16.sdp))
-//                        //weekly card
+                        //weekly card
                         Surface(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(120.sdp)
                                 .padding(horizontal = 16.sdp),
-                            color = secondaryColor,
+                            color = lightPurpleColor,
                             shape = RoundedCornerShape(16.sdp),
-                            shadowElevation = 1.sdp
+                            tonalElevation = 1.sdp
                         ) {
                             Row(
                                 modifier = Modifier
@@ -310,33 +305,34 @@ fun HomeScreen(
                                     .padding(16.sdp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Column(
+                                Text(
                                     modifier = Modifier.weight(1f),
+                                    text = "This Month`s Goal",
+                                    fontSize = 24.textSdp,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    maxLines = 1
+                                )
+
+
+                                Column(
                                     verticalArrangement = Arrangement.Center,
                                     horizontalAlignment = Alignment.Start
                                 ) {
                                     Text(
                                         text = monthlyAchievedSteps.toString(),
                                         fontSize = 42.textSdp,
-                                        color = darkBlueColor,
+                                        color = darkPurpleColor,
                                         fontWeight = FontWeight.Bold
                                     )
                                     Spacer(modifier = Modifier.height(4.sdp))
                                     Text(
                                         text = "/ ${monthlyTotalSteps} steps",
                                         fontSize = 14.textSdp,
-                                        color = lightBlueColor,
+                                        color = Color.White,
                                         fontWeight = FontWeight.Bold
                                     )
                                 }
-                                LinearProgressBar(
-                                    modifier = Modifier.padding(16.sdp),
-                                    text = if(monthlyTotalSteps!=0L)"${(monthlyAchievedSteps/monthlyTotalSteps)*100f}%" else "0%",
-                                    progress = if(monthlyTotalSteps!=0L) ((monthlyAchievedSteps/monthlyTotalSteps)*100f) else 0f,
-                                    progressBackgroundColor = lightBlueColor,
-                                    progressColor = darkBlueColor,
-                                    progressIndicatorTextColor = darkBlueColor
-                                )
                             }
                         }
                         Spacer(modifier = Modifier.height(16.sdp))
@@ -348,8 +344,9 @@ fun HomeScreen(
                             progressBackgroundColor = darkGreenColor,
                             progressColor = lightGreenColor,
                             progressIndicatorTextColor = lightGreenColor,
-                            progressIndicatorText = if(userData.userProfile!=null) ((userData.userProfile?.totalCaloriesIntake!!.toFloat()/userData.userProfile.caloriesIntake!!.toFloat())*100f).toString()+"%" else "0%",
-                            progress = if(userData.userProfile!=null) ((userData.userProfile?.totalCaloriesIntake!!.toFloat()/userData.userProfile.caloriesIntake!!.toFloat())*100f) else 0f
+                            progressIndicatorText = if (userData.userProfile != null) ((userData.userProfile?.totalCaloriesIntake!!.toFloat() / userData.userProfile.caloriesIntake!!.toFloat()) * 100f).valueInThreeDecimalPoints()
+                                .toString() + "%" else "0 %",
+                            progress = if (userData.userProfile != null) ((userData.userProfile?.totalCaloriesIntake!!.toFloat() / userData.userProfile.caloriesIntake!!.toFloat()) * 100f) else 0f
                         )//Food
                         Spacer(modifier = Modifier.height(16.sdp))
                         HomeScreenRoutineItem(
@@ -359,8 +356,9 @@ fun HomeScreen(
                             progressBackgroundColor = lightPurpleColor,
                             progressColor = darkPurpleColor,
                             progressIndicatorTextColor = darkPurpleColor,
-                            progressIndicatorText = if(userData.userProfile!=null) ((userData.userProfile?.totalWaterIntake!!.toFloat()/userData.userProfile.waterIntake!!.toFloat())*100f).toString()+"%" else "0%",
-                            progress = if(userData.userProfile!=null) ((userData.userProfile?.totalWaterIntake!!.toFloat()/userData.userProfile.waterIntake!!.toFloat())*100f) else 0f
+                            progressIndicatorText = if (userData.userProfile != null) ((userData.userProfile?.totalWaterIntake!!.toFloat() / userData.userProfile.waterIntake!!.toFloat()) * 100f).valueInThreeDecimalPoints()
+                                .toString() + " %" else "0 %",
+                            progress = if (userData.userProfile != null) ((userData.userProfile?.totalWaterIntake!!.toFloat() / userData.userProfile.waterIntake!!.toFloat()) * 100f) else 0f
                         )//Sleep
                         Spacer(modifier = Modifier.height(16.sdp))
                         HomeScreenRoutineItem(
@@ -370,8 +368,9 @@ fun HomeScreen(
                             progressBackgroundColor = lightBlueColor,
                             progressColor = darkBlueColor,
                             progressIndicatorTextColor = darkBlueColor,
-                            progressIndicatorText = if(userData.userProfile!=null) ((userData.userProfile?.totalSleepOurs!!.toFloat()/userData.userProfile.sleepTime!!.toFloat())*100f).toString()+"%" else "0%",
-                            progress = if(userData.userProfile!=null) ((userData.userProfile?.totalSleepOurs!!.toFloat()/userData.userProfile.sleepTime!!.toFloat())*100f) else 0f,
+                            progressIndicatorText = if (userData.userProfile != null) ((userData.userProfile?.totalSleepOurs!!.toFloat() / userData.userProfile.sleepTime!!.toFloat()) * 100f).valueInThreeDecimalPoints()
+                                .toString() + "%" else "0%",
+                            progress = if (userData.userProfile != null) ((userData.userProfile?.totalSleepOurs!!.toFloat() / userData.userProfile.sleepTime!!.toFloat()) * 100f) else 0f,
                             isLastItem = true
                         )//Water
                         Spacer(modifier = Modifier.height(16.sdp)) //temp

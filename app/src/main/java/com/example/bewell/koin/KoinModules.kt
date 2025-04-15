@@ -5,11 +5,10 @@ import com.example.bewell.data.datastore.DataStoreManager
 import com.example.bewell.data.room.BeWellDataBase
 import com.example.bewell.data.room.UserProfileDao
 import com.example.bewell.domain.repositoryDef.UserProfileRepository
-import com.example.bewell.presentation.viewmodel.StepsCounterViewModel
+import com.example.bewell.presentation.viewmodel.SplashHandlingViewModel
 import com.example.bewell.presentation.viewmodel.UserProfileViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
-import kotlin.math.sin
 
 val appModule = module {
     //datastore manager
@@ -25,6 +24,6 @@ val appModule = module {
 }
 
 val viewModelModule = module {
-    single { StepsCounterViewModel() }
+    single { SplashHandlingViewModel() }
     single { UserProfileViewModel(get()) }
 }

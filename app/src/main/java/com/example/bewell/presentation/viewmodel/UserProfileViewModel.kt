@@ -1,5 +1,6 @@
 package com.example.bewell.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bewell.domain.model.UserProfile
@@ -35,6 +36,8 @@ class UserProfileViewModel(private val userProfileRepository: UserProfileReposit
             _userProfileData.value = UserProfileState(isLoading = true)
             userProfileRepository.getUserProfile().collect { userData ->
                 if (userData.isNotEmpty()) {
+                    _totalStepsEver.value = 0
+                    _totalStepsEverDid.value = 0
                     userData.forEach {
                         _totalStepsEver.value += it.stepsGoal
                         _totalStepsEverDid.value += it.totalStepsDid
@@ -47,9 +50,14 @@ class UserProfileViewModel(private val userProfileRepository: UserProfileReposit
         }
     }
 
-    fun updateStepsGoal(monthId: String , stepsDid: Int) {
+    fun userProfileViewModel() {
         viewModelScope.launch {
-            userProfileRepository.updateStepsGoal(monthId,stepsDid)
+            _userProfileData.value.userProfile?.let {
+                Log.d("checkingBeWellData", "userProfileData: ${it}")
+                userProfileRepository.updateStepsGoal(monthId = it.id.toString(), stepsDid = it.totalStepsDid+1, calories =  calculateCalories(it.totalStepsDid+1))
+            }?: kotlin.run {
+                Log.d("checkingBeWellData", "userProfileData: its null no data")
+            }
         }
     }
 
@@ -59,6 +67,10 @@ class UserProfileViewModel(private val userProfileRepository: UserProfileReposit
                 userProfileRepository.createUserProfile(data)
             }
         }
+    }
+
+    private fun calculateCalories(steps: Int): Int {
+        return (steps * 65 * 0.0005f).toInt()
     }
 
 }

@@ -18,7 +18,8 @@ import com.example.bewell.common.NavGraph
 import com.example.bewell.common.Screens
 import com.example.bewell.data.datastore.DataStoreManager
 import com.example.bewell.ui.theme.BeWellTheme
-import com.example.bewell.presentation.viewmodel.StepsCounterViewModel
+import com.example.bewell.presentation.viewmodel.SplashHandlingViewModel
+import com.example.bewell.presentation.viewmodel.UserProfileViewModel
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -26,7 +27,8 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
     val sensorManager by lazy { getSystemService(SENSOR_SERVICE) as SensorManager }
     var sensor: Sensor? = null
-    val viewModel: StepsCounterViewModel by viewModel()
+    val viewModel: SplashHandlingViewModel by viewModel()
+    val userProfileViewModel: UserProfileViewModel by viewModel()
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +77,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         sensorEvent?.let { event ->
             if (event.sensor.type == Sensor.TYPE_STEP_DETECTOR) {
                 if (sensorEvent.values.isNotEmpty() && sensorEvent.values[0] == 1.0f) {
-                    viewModel.incrementCounter()
+                    userProfileViewModel.userProfileViewModel()
                 }
             }
         }
