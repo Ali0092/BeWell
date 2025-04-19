@@ -77,6 +77,14 @@ import com.example.bewell.ui.theme.lightPurpleColor
 import com.example.bewell.ui.theme.secondaryColor
 import org.koin.androidx.compose.get
 
+
+/*
+* 1. fix basic home screen bugs
+* 2. add view exercise screen of fitness page
+* 3. complete profile screen
+* 4. start AR work
+*/
+
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -146,16 +154,10 @@ fun HomeScreen(
 
         if (userData.userProfile?.stepsGoal != null) {
 
-            Log.d("checkingOutTheDifferenceBetweenDates", "HomeScreen: ${userData.userProfile.date.formatDateFromMillis()}")
-
-
             userData.userProfile.date.getDateDifferences().forEach { it->
                 userViewModel.insertNewDay(it)
                 Log.d("checkingOutTheDifferenceBetweenDates", "difference: ${it.formatDateFromMillis()}")
             }
-
-//            userViewModel.userProfileData.value.userProfile!!.date = 1744614000000
-//            userViewModel.updateUserData()
 
             goalProgress.value =
                 (userData.userProfile!!.totalStepsDid.toFloat() + userData.userProfile.totalCaloriesBurned!!.toFloat()) / (userData.userProfile.stepsGoal!!.toFloat() + userData.userProfile.caloriesBurnedTarget!!.toFloat())

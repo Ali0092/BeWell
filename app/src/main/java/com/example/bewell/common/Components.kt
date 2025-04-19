@@ -182,7 +182,7 @@ fun CircularProgressBar(
         }
 
         Text(
-            text = animatedProgress.value.valueInThreeDecimalPoints().toString() + " %",
+            text = (animatedProgress.value*100).valueInThreeDecimalPoints().toString() + " %",
             fontSize = 18.textSdp,
             color = darkPurpleColor,
             fontWeight = FontWeight.Bold,
