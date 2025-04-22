@@ -40,13 +40,12 @@ import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.bewell.R
-import com.example.bewell.Utils.FitnessExercises
-import com.example.bewell.Utils.Utils
-import com.example.bewell.Utils.Utils.balancedTrainingExercises
-import com.example.bewell.Utils.Utils.muscleBuildExercises
+import com.example.bewell.common.FitnessExercises
 import com.example.bewell.common.Screens
+import com.example.bewell.common.Utils.balancedTrainingExercises
+import com.example.bewell.common.Utils.muscleBuildExercises
 import com.example.bewell.common.Utils.selectedExercise
+import com.example.bewell.common.Utils.weightLossExercises
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor
@@ -143,7 +142,7 @@ fun FitnessScreen(modifier: Modifier = Modifier, navController: NavHostControlle
                 .offset(0.sdp, currentBarSize.toFloat().dp)
         ) {
             item {
-                FitnessScreenBar(navController= navController, title = "Weight Loss", dataList = Utils.weightLossExercises)
+                FitnessScreenBar(navController= navController, title = "Weight Loss", dataList = weightLossExercises)
             }
             item {
                 FitnessScreenBar(navController= navController, title = "Build Muscle", dataList = muscleBuildExercises)

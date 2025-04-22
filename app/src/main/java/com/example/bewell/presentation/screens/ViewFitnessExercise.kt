@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -25,6 +26,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
+import com.example.bewell.R
 import com.example.bewell.common.Utils.selectedExercise
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
@@ -52,7 +54,18 @@ fun ViewFitnessExercise(modifier: Modifier = Modifier, navController : NavHostCo
                     color = darkBlueColor,
                     fontWeight = FontWeight.Bold
                 )
+                Spacer(modifier = Modifier.weight(1f))
+                Image(
+                    painter = painterResource(R.drawable.ar_view),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(30.sdp)
+                        .clickable {
+                        navController.navigateUp()
+                    }
+                )
             }
+            //Body
             Spacer(modifier = Modifier.height(8.sdp))
             Image(
                 painter = painterResource(selectedExercise.image),
