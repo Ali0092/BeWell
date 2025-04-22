@@ -16,6 +16,7 @@ import com.example.bewell.presentation.screens.MainScreen
 import com.example.bewell.presentation.screens.OnboardingScreen
 import com.example.bewell.presentation.screens.ProfileScreen
 import com.example.bewell.presentation.screens.SetupUserGoal
+import com.example.bewell.presentation.screens.ViewFitnessExercise
 
 //Navigation Routes List
 enum class Screens {
@@ -25,6 +26,7 @@ enum class Screens {
     MAIN,
     HOME,
     FITNESS,
+    FITNESS_DETAILS,
     PROFILE
 }
 
@@ -34,6 +36,7 @@ sealed class SimpleNavigation(val route: String) {
     class CreateProfile: SimpleNavigation(Screens.CREATE_PROFILE.name)
     class SetupGoal: SimpleNavigation(Screens.SETUP_GOAL.name)
     class Main: SimpleNavigation(Screens.ONBOARDING.name)
+    class FitnessDetail: SimpleNavigation(Screens.FITNESS_DETAILS.name)
 }
 
 sealed class BottomNavigationScreens(val route: String, val title: String, val icon: Int) {
@@ -68,6 +71,7 @@ fun NavGraph(
         composable(Screens.MAIN.name) {
             MainScreen()
         }
+
     }
 }
 
@@ -89,12 +93,15 @@ fun BottomNavGraph(
         }
 
         composable(Screens.FITNESS.name) {
-            FitnessScreen()
+            FitnessScreen(navController = navController)
         }
 
         composable(Screens.PROFILE.name) {
             ProfileScreen()
         }
 
+        composable(Screens.FITNESS_DETAILS.name) {
+            ViewFitnessExercise(navController = navController)
+        }
     }
 }

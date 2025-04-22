@@ -10,9 +10,9 @@ data class BottomNavItems(
 )
 
 data class FitnessExercises(
-    val id: Int,
-    val name: String,
-    val image: Int,
+    val id: Int = 0,
+    val name: String = "",
+    val image: Int = 0,
 )
 
 object Utils {

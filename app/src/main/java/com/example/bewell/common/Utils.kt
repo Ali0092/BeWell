@@ -1,9 +1,11 @@
 package com.example.bewell.common
 
+import com.example.bewell.Utils.FitnessExercises
 import com.example.bewell.domain.model.UserProfile
 
 object Utils {
 
+    var selectedExercise: FitnessExercises = FitnessExercises()
 
     fun checkIfCanMoveToNext(screen: Int = 0,userData: UserProfile, canMove: (Boolean, String) -> Unit) {
 

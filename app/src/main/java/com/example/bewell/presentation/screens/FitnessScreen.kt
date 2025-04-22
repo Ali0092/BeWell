@@ -2,6 +2,7 @@ package com.example.bewell.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -38,11 +39,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.bewell.R
 import com.example.bewell.Utils.FitnessExercises
 import com.example.bewell.Utils.Utils
 import com.example.bewell.Utils.Utils.balancedTrainingExercises
 import com.example.bewell.Utils.Utils.muscleBuildExercises
+import com.example.bewell.common.Screens
+import com.example.bewell.common.Utils.selectedExercise
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor
@@ -50,7 +54,7 @@ import com.example.bewell.ui.theme.darkBlueColor
 import com.example.bewell.ui.theme.secondaryColor
 
 @Composable
-fun FitnessScreen(modifier: Modifier = Modifier) {
+fun FitnessScreen(modifier: Modifier = Modifier, navController: NavHostController) {
 
     var currentBarSize by remember { mutableFloatStateOf(250f) }
     // Calculate transition progress (0.0 = expanded, 1.0 = collapsed)
@@ -139,13 +143,13 @@ fun FitnessScreen(modifier: Modifier = Modifier) {
                 .offset(0.sdp, currentBarSize.toFloat().dp)
         ) {
             item {
-                FitnessScreenBar(title = "Weight Loss", image = R.drawable.fitness1, dataList = Utils.weightLossExercises)
+                FitnessScreenBar(navController= navController, title = "Weight Loss", dataList = Utils.weightLossExercises)
             }
             item {
-                FitnessScreenBar(title = "Build Muscle", image = R.drawable.fitness2, dataList = muscleBuildExercises)
+                FitnessScreenBar(navController= navController, title = "Build Muscle", dataList = muscleBuildExercises)
             }
             item {
-                FitnessScreenBar(title = "Balanced Training", image = R.drawable.fitness3, dataList = balancedTrainingExercises)
+                FitnessScreenBar(navController= navController, title = "Balanced Training", dataList = balancedTrainingExercises)
             }
         }
     }
@@ -153,7 +157,7 @@ fun FitnessScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun FitnessScreenBar(modifier: Modifier = Modifier, title: String, image: Int, dataList: List<FitnessExercises>) {
+fun FitnessScreenBar(modifier: Modifier = Modifier, navController: NavHostController,title: String, dataList: List<FitnessExercises>) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -180,7 +184,11 @@ fun FitnessScreenBar(modifier: Modifier = Modifier, title: String, image: Int, d
 
             LazyRow(modifier = Modifier.fillMaxWidth().padding(end = 6.sdp)) {
                 items(10) { index->
-                    FitnessBarSingleItem(title = dataList[index].name, img = dataList[index].image)
+                    FitnessBarSingleItem(title = dataList[index].name, img = dataList[index].image) {
+                        //add navigation
+                        selectedExercise = dataList[index] // selected exercise.....
+                        navController.navigate(Screens.FITNESS_DETAILS.name)
+                    }
                 }
             }
 
@@ -189,13 +197,16 @@ fun FitnessScreenBar(modifier: Modifier = Modifier, title: String, image: Int, d
 }
 
 @Composable
-fun FitnessBarSingleItem(title:String,img: Int) {
+fun FitnessBarSingleItem(title:String,img: Int, onItemClicked: () -> Unit) {
 
     Column(
         modifier = Modifier
             .wrapContentHeight()
             .width(140.sdp)
             .padding(start = 12.sdp, top = 8.sdp)
+            .clickable {
+                onItemClicked()
+            }
     ) {
         Image(
             painter = painterResource(img),
