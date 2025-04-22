@@ -2,7 +2,6 @@ package com.example.bewell.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -49,8 +48,8 @@ fun ViewFitnessExercise(modifier: Modifier = Modifier, navController : NavHostCo
                     })
                 Spacer(modifier = Modifier.width(8.sdp))
                 Text(
-                    text = selectedExercise.name,
-                    fontSize = 18.textSdp,
+                    text ="Exercise Details",
+                    fontSize = 16.textSdp,
                     color = darkBlueColor,
                     fontWeight = FontWeight.Bold
                 )
@@ -61,7 +60,7 @@ fun ViewFitnessExercise(modifier: Modifier = Modifier, navController : NavHostCo
                     modifier = Modifier
                         .size(30.sdp)
                         .clickable {
-                        navController.navigateUp()
+
                     }
                 )
             }
@@ -78,25 +77,15 @@ fun ViewFitnessExercise(modifier: Modifier = Modifier, navController : NavHostCo
             )
             Spacer(modifier = Modifier.height(16.sdp))
             Text(
-                text = "Exercise Details",
+                text = selectedExercise.name,
                 fontSize = 18.textSdp,
                 color = darkBlueColor,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(16.sdp))
+            Spacer(modifier = Modifier.height(8.sdp))
             Text(
-                text = "\uD83D\uDD30 Warm-Up (5 min)\n" +
-                        "Arm circles – 30 sec each direction\n"  + "Shoulder rolls – 30 sec each direction\n"  +
-                        "Wrist stretches – 1 min\n"  +
-                        "Push-up plank hold – 30 sec\n"  +
-                        "Light jumping jacks – 2 min\n"  +
-                        "\n"+
-                        "\uD83D\uDCA5 Main Workout\n" +
-                        "\uD83D\uDD01 Standard Push-Ups\n" +
-                        "3 sets of 10–20 reps\n"  +
-                        "Rest: 30–45 seconds between sets\n"  +
-                        "Focus on full range of motion, core tight, and elbows at ~45° angle.",
-                fontSize = 14.textSdp,
+                text = selectedExercise.description,
+                fontSize = 15.textSdp,
                 color = darkBlueColor,
             )
         }

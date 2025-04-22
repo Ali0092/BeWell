@@ -2,7 +2,6 @@ package com.example.bewell.presentation.screens
 
 import android.Manifest
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -13,7 +12,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -21,16 +19,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.bewell.Utils.Utils
 import com.example.bewell.common.BottomNavGraph
-import com.example.bewell.presentation.viewmodel.UserProfileViewModel
-import com.example.bewell.presentation.viewstates.UserProfileState
+import com.example.bewell.common.Utils
 import com.example.bewell.ui.theme.darkBlueColor
 import com.example.bewell.ui.theme.secondaryColor
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import org.koin.androidx.compose.get
+
 
 @OptIn(ExperimentalPermissionsApi::class)
 @RequiresApi(Build.VERSION_CODES.Q)

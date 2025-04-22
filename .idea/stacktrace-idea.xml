@@ -3,10 +3,7 @@
   <component name="StacktraceSettings">
     <option name="folders">
       <set>
-        <option value="$PROJECT_DIR$/app/build/generated/ap_generated_sources/release/out" />
-        <option value="$PROJECT_DIR$/app/build/generated/ksp/release/java" />
-        <option value="$PROJECT_DIR$/app/build/generated/ksp/release/kotlin" />
-        <option value="$PROJECT_DIR$/app/build/generated/res/resValues/release" />
+        <option value="$PROJECT_DIR$/app/src/androidTest/java" />
         <option value="$PROJECT_DIR$/app/src/main/java" />
         <option value="$PROJECT_DIR$/app/src/main/res" />
         <option value="$PROJECT_DIR$/app/src/test/java" />

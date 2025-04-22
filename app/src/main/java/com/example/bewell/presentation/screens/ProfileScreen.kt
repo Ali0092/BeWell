@@ -5,20 +5,28 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,18 +44,23 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bewell.R
+import com.example.bewell.presentation.viewmodel.UserProfileViewModel
+import com.example.bewell.presentation.viewstates.UserProfileState
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor
 import com.example.bewell.ui.theme.darkBlueColor
+import com.example.bewell.ui.theme.lightBlueColor
 import com.example.bewell.ui.theme.secondaryColor
+import org.koin.androidx.compose.get
 
 @Composable
-fun ProfileScreen(modifier: Modifier = Modifier) {
+fun ProfileScreen(modifier: Modifier = Modifier, userViewModel: UserProfileViewModel = get()) {
 
     var currentBarSize by remember { mutableStateOf(250f) } //current bar size
     val collapseProgress by remember(currentBarSize) {  //collapse progress from 0-1f
@@ -55,6 +68,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
             (250f - currentBarSize) / (250f - 60f)
         }
     }
+    val userData = userViewModel.userProfileData.collectAsState(initial = UserProfileState()).value
 
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
@@ -103,22 +117,23 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
         Box(
             modifier = modifier
                 .fillMaxWidth()
-                .height(currentBarSize.toFloat().dp)
+                .height(250.sdp)
                 .background(backgroundColor)
         ) {
 
-            val screenWidth = LocalConfiguration.current.screenWidthDp
-            val maxOffset = (screenWidth / 2) - 48  // Rough estimate for centered to start position
-            val horizontalOffset = maxOffset * collapseProgress
-
-            val fontSize = 36 - (10 * collapseProgress)
+//            val screenWidth = LocalConfiguration.current.screenWidthDp
+//            val maxOffset = (screenWidth / 2) - 48  // Rough estimate for centered to start position
+//            val horizontalOffset = maxOffset * collapseProgress
+//
+//            val fontSize = 36 - (10 * collapseProgress)
 
             Text(
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .offset(x = (-horizontalOffset).dp),
+//                    .offset(x = (-horizontalOffset).dp)
+                ,
                 text = "My Page",
-                fontSize = fontSize.sp,
+                fontSize = 36.textSdp,
                 color = darkBlueColor,
                 fontWeight = FontWeight.Bold
             )
@@ -130,9 +145,11 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                 .align(Alignment.TopStart)
                 .offset(0.sdp, currentBarSize.toFloat().dp)
         ) {
-
             item {
-                BasicProfileCard()
+                BasicProfileCard(userData.userProfile?.name.toString()+" ( ${userData.userProfile?.age.toString()} yrs )")
+            }
+            item {
+                BadgesCard()
             }
         }
 
@@ -142,13 +159,14 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
 
 }
 
+//badges card
 @Composable
-fun BasicProfileCard() {
+fun BasicProfileCard(name: String) {
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 8.sdp, end = 8.sdp, top = 16.sdp, bottom = 16.sdp)
+            .padding(start = 8.sdp, end = 8.sdp, top = 16.sdp, bottom = 12.sdp)
     ) {
 
         Surface(
@@ -168,7 +186,7 @@ fun BasicProfileCard() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "The Great Ghibilli",
+                    text = name,
                     color = darkBlueColor,
                     fontSize = 18.textSdp,
                     fontWeight = FontWeight.Bold
@@ -205,4 +223,66 @@ fun BasicProfileCard() {
 
     }
 
+}
+
+@Composable
+fun BadgesCard(modifier: Modifier = Modifier) {
+
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(start = 16.sdp, end = 16.sdp, bottom = 16.sdp),
+        color = secondaryColor,
+        shape = RoundedCornerShape(16.sdp),
+        shadowElevation = 1.sdp
+    ) {
+
+        Column( modifier = Modifier.fillMaxSize().padding(12.sdp)) {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.sdp)) {
+                Text(
+                    text = "Badges",
+                    color = darkBlueColor,
+                    fontSize = 16.textSdp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Icon(
+                    imageVector = Icons.Rounded.KeyboardArrowRight,
+                    contentDescription = null,
+                    modifier = Modifier.size(25.sdp),
+                    tint = darkBlueColor
+                )
+            }
+            LazyRow {
+                items(4) {
+                    BadgesSingleItem()
+                }
+            }
+
+        }
+
+    }
+
+}
+
+@Composable
+fun BadgesSingleItem(modifier: Modifier = Modifier) {
+    Column(modifier = modifier.padding(vertical = 8.sdp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+        Image(painter = painterResource(R.drawable.badge1), contentDescription = null, modifier = Modifier.size(120.sdp,70.sdp))
+        Text(
+            text = "10,000 steps",
+            color = darkBlueColor,
+            fontSize = 14.textSdp,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = "12/08/2025",
+            color = lightBlueColor,
+            fontSize = 12.textSdp,
+            fontWeight = FontWeight.Bold
+        )
+    }
 }
