@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.bewell.R
+import com.example.bewell.presentation.screens.ARScreen
 import com.example.bewell.presentation.screens.CreateUserProfileScreen
 import com.example.bewell.presentation.screens.FitnessScreen
 import com.example.bewell.presentation.screens.HomeScreen
@@ -27,7 +28,8 @@ enum class Screens {
     HOME,
     FITNESS,
     FITNESS_DETAILS,
-    PROFILE
+    PROFILE,
+    AR_SCREEN
 }
 
 //Navigation
@@ -37,6 +39,7 @@ sealed class SimpleNavigation(val route: String) {
     class SetupGoal: SimpleNavigation(Screens.SETUP_GOAL.name)
     class Main: SimpleNavigation(Screens.ONBOARDING.name)
     class FitnessDetail: SimpleNavigation(Screens.FITNESS_DETAILS.name)
+    class ArScreen: SimpleNavigation(Screens.AR_SCREEN.name)
 }
 
 sealed class BottomNavigationScreens(val route: String, val title: String, val icon: Int) {
@@ -70,6 +73,9 @@ fun NavGraph(
         }
         composable(Screens.MAIN.name) {
             MainScreen()
+        }
+        composable(Screens.AR_SCREEN.name) {
+            ARScreen()
         }
 
     }

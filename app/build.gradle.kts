@@ -61,7 +61,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
 
 
     //Navigation
@@ -90,5 +89,10 @@ dependencies {
     //splash screen library
     implementation(libs.androidx.core.splashscreen)
 
+    // ✅ ARCore
+    implementation(libs.core)
+
+    // ✅ SceneView (AR + 3D Model Support)
+    implementation(libs.arsceneview)
 
 }
