@@ -74,10 +74,6 @@ fun NavGraph(
         composable(Screens.MAIN.name) {
             MainScreen()
         }
-        composable(Screens.AR_SCREEN.name) {
-            ARScreen()
-        }
-
     }
 }
 
@@ -108,6 +104,9 @@ fun BottomNavGraph(
 
         composable(Screens.FITNESS_DETAILS.name) {
             ViewFitnessExercise(navController = navController)
+        }
+        composable(Screens.AR_SCREEN.name) {
+            ARScreen()
         }
     }
 }

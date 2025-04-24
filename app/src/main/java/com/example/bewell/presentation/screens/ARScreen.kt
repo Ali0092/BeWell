@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import com.example.bewell.common.Utils
 import com.google.android.filament.Engine
 import com.google.ar.core.Anchor
 import com.google.ar.core.Config
@@ -44,7 +45,6 @@ import io.github.sceneview.loaders.ModelLoader
 import io.github.sceneview.model.ModelInstance
 import io.github.sceneview.node.CubeNode
 import io.github.sceneview.node.ModelNode
-import io.github.sceneview.rememberCameraNode
 import io.github.sceneview.rememberCollisionSystem
 import io.github.sceneview.rememberEngine
 import io.github.sceneview.rememberMaterialLoader
@@ -53,74 +53,6 @@ import io.github.sceneview.rememberNodes
 import io.github.sceneview.rememberOnGestureListener
 import io.github.sceneview.rememberView
 
-@Composable
-fun CameraPermissionHandler(
-    onPermissionGranted: @Composable () -> Unit
-) {
-    val context = LocalContext.current
-    var showRationale by remember { mutableStateOf(false) }
-
-    val permission = Manifest.permission.CAMERA
-    val permissionState = checkPermissionState(context, permission)
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (!isGranted) {
-            showRationale = true
-        }
-    }
-
-    when {
-        permissionState -> {
-            onPermissionGranted()
-        }
-        showRationale -> {
-            PermissionRationaleDialog(
-                onDismiss = { showRationale = false },
-                onConfirm = {
-                    showRationale = false
-                    permissionLauncher.launch(permission)
-                }
-            )
-        }
-        else -> {
-            SideEffect {
-                permissionLauncher.launch(permission)
-            }
-        }
-    }
-}
-
-@Composable
-fun PermissionRationaleDialog(
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Camera Permission Required") },
-        text = { Text("Camera access is required for AR functionality. Please grant the permission to continue.") },
-        confirmButton = {
-            Button(onClick = onConfirm) {
-                Text("Request Permission")
-            }
-        },
-        dismissButton = {
-            Button(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        }
-    )
-}
-
-fun checkPermissionState(context: Context, permission: String): Boolean {
-    return ContextCompat.checkSelfPermission(
-        context,
-        permission
-    ) == PackageManager.PERMISSION_GRANTED
-}
-
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun ARScreen(modifier: Modifier = Modifier) {
@@ -128,10 +60,6 @@ fun ARScreen(modifier: Modifier = Modifier) {
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-//        CameraPermissionHandler {
-//
-//        }
-
         ARComposeScreen()
     }
 }
@@ -158,8 +86,6 @@ fun ARComposeScreen() {
     val frame = remember {
         mutableStateOf<Frame?>(null)
     }
-
-
 
     //SCENE VIEW...
     ARScene(
@@ -205,7 +131,7 @@ fun ARComposeScreen() {
                             materialLoader = materialLoader,
                             modelInstance = modelInstance,
                             anchor = anchor,
-                            model = "models/car.glb"
+                            model = "models/${Utils.selectedExercise.model}"
                         )
                         childNodes += nodeModel
                     }
@@ -237,7 +163,7 @@ fun createAnchorNode(
                 this+=modelLoader.createInstancedModel(model, 10)
             }
         }.removeLast(),
-        scaleToUnits = 0.3f,
+        scaleToUnits = 1f,
 
     ).apply {
         isEditable = true //to make the node editable

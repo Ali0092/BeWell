@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import com.example.bewell.R
+import com.example.bewell.common.Screens
 import com.example.bewell.common.Utils.selectedExercise
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
@@ -54,15 +55,17 @@ fun ViewFitnessExercise(modifier: Modifier = Modifier, navController : NavHostCo
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                Image(
-                    painter = painterResource(R.drawable.ar_view),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(30.sdp)
-                        .clickable {
-
-                    }
-                )
+                if (selectedExercise.model!="") {
+                    Image(
+                        painter = painterResource(R.drawable.ar_view),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(30.sdp)
+                            .clickable {
+                                navController.navigate(Screens.AR_SCREEN.name)
+                            }
+                    )
+                }
             }
             //Body
             Spacer(modifier = Modifier.height(8.sdp))

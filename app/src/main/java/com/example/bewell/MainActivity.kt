@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                     startDestination.value = when {
                         isOnBoardingDone.value == true && isUserProfileDone.value == true -> Screens.MAIN.name
                         isOnBoardingDone.value == true -> Screens.CREATE_PROFILE.name
-                        else -> Screens.AR_SCREEN.name //its onboarding
+                        else -> Screens.ONBOARDING.name //its onboarding
                     }
                     viewModel.setSplashLoadingStatus(false)
                 }

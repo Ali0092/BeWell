@@ -1,8 +1,13 @@
 package com.example.bewell.presentation.screens
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,10 +18,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -25,6 +37,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import com.example.bewell.R
 import com.example.bewell.ui.sdp
@@ -96,3 +109,76 @@ fun PermissionRationale() {
 
     }
 }
+
+/*
+* Camera permission for AR....
+*/
+
+@Composable
+fun CameraPermissionHandler(
+    onPermissionGranted: @Composable () -> Unit
+) {
+    val context = LocalContext.current
+    var showRationale by remember { mutableStateOf(false) }
+
+    val permission = Manifest.permission.CAMERA
+    val permissionState = checkPermissionState(context, permission)
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (!isGranted) {
+            showRationale = true
+        }
+    }
+
+    when {
+        permissionState -> {
+            onPermissionGranted()
+        }
+        showRationale -> {
+            PermissionRationaleDialog(
+                onDismiss = { showRationale = false },
+                onConfirm = {
+                    showRationale = false
+                    permissionLauncher.launch(permission)
+                }
+            )
+        }
+        else -> {
+            SideEffect {
+                permissionLauncher.launch(permission)
+            }
+        }
+    }
+}
+
+@Composable
+fun PermissionRationaleDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Camera Permission Required") },
+        text = { Text("Camera access is required for AR functionality. Please grant the permission to continue.") },
+        confirmButton = {
+            Button(onClick = onConfirm) {
+                Text("Request Permission")
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
+}
+
+fun checkPermissionState(context: Context, permission: String): Boolean {
+    return ContextCompat.checkSelfPermission(
+        context,
+        permission
+    ) == PackageManager.PERMISSION_GRANTED
+}
+
