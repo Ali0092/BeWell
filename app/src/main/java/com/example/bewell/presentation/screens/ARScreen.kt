@@ -205,7 +205,7 @@ fun ARComposeScreen() {
                             materialLoader = materialLoader,
                             modelInstance = modelInstance,
                             anchor = anchor,
-                            model = "models/cat.glb"
+                            model = "models/car.glb"
                         )
                         childNodes += nodeModel
                     }
@@ -248,7 +248,7 @@ fun createAnchorNode(
         size = modelNode.extents,
         center = modelNode.center,
         materialInstance = materialLoader.createColorInstance(Color.White)
-    ).apply { isEditable = false }
+    ).apply { isVisible = false }
 
     modelNode.addChildNode(bounds)
     anchorNode.addChildNode(modelNode)
