@@ -1,4 +1,4 @@
-package com.example.bewell.presentation.screens
+package com.example.bewell.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.bewell.common.FitnessExercises
-import com.example.bewell.common.Screens
+import com.example.bewell.nav_components.Screens
 import com.example.bewell.common.Utils.balancedTrainingExercises
 import com.example.bewell.common.Utils.muscleBuildExercises
 import com.example.bewell.common.Utils.selectedExercise

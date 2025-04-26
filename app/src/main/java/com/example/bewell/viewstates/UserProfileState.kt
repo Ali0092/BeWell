@@ -1,6 +1,6 @@
-package com.example.bewell.presentation.viewstates
+package com.example.bewell.viewstates
 
-import com.example.bewell.domain.model.UserProfile
+import com.example.bewell.model.UserProfile
 
 data class UserProfileState(
     val isLoading: Boolean = false,

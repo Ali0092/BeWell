@@ -1,4 +1,4 @@
-package com.example.bewell.presentation.screens
+package com.example.bewell.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -41,16 +41,13 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.bewell.R
-import com.example.bewell.presentation.viewmodel.UserProfileViewModel
-import com.example.bewell.presentation.viewstates.UserProfileState
+import com.example.bewell.viewmodel.UserProfileViewModel
+import com.example.bewell.viewstates.UserProfileState
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor

@@ -14,12 +14,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
-import com.example.bewell.common.NavGraph
-import com.example.bewell.common.Screens
-import com.example.bewell.data.datastore.DataStoreManager
+import com.example.bewell.nav_components.NavGraph
+import com.example.bewell.nav_components.Screens
+import com.example.bewell.datastore.DataStoreManager
 import com.example.bewell.ui.theme.BeWellTheme
-import com.example.bewell.presentation.viewmodel.SplashHandlingViewModel
-import com.example.bewell.presentation.viewmodel.UserProfileViewModel
+import com.example.bewell.viewmodel.SplashHandlingViewModel
+import com.example.bewell.viewmodel.UserProfileViewModel
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

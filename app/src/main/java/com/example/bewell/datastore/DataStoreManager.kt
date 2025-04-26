@@ -1,4 +1,4 @@
-package com.example.bewell.data.datastore
+package com.example.bewell.datastore
 
 import android.content.Context
 import androidx.datastore.core.DataStore

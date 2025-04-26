@@ -21,7 +21,7 @@ fun Long.getDayOfMonthFromTimestamp(): Int {
 
 @SuppressLint("DefaultLocale")
 fun Float.valueInThreeDecimalPoints() : Float {
-    return String.format("%.3f", this).toFloat()
+    return String.format("%.2f", this).toFloat()
 }
 
 fun Long.formatDateFromMillis(): String {

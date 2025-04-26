@@ -1,7 +1,8 @@
 package com.example.bewell.common
 
 import com.example.bewell.R
-import com.example.bewell.domain.model.UserProfile
+import com.example.bewell.model.UserProfile
+import com.example.bewell.nav_components.Screens
 
 object Utils {
 

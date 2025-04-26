@@ -1,4 +1,4 @@
-package com.example.bewell.common
+package com.example.bewell.nav_components
 
 
 import android.os.Build
@@ -9,15 +9,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.bewell.R
-import com.example.bewell.presentation.screens.ARScreen
-import com.example.bewell.presentation.screens.CreateUserProfileScreen
-import com.example.bewell.presentation.screens.FitnessScreen
-import com.example.bewell.presentation.screens.HomeScreen
-import com.example.bewell.presentation.screens.MainScreen
-import com.example.bewell.presentation.screens.OnboardingScreen
-import com.example.bewell.presentation.screens.ProfileScreen
-import com.example.bewell.presentation.screens.SetupUserGoal
-import com.example.bewell.presentation.screens.ViewFitnessExercise
+import com.example.bewell.screens.ARScreen
+import com.example.bewell.screens.CreateUserProfileScreen
+import com.example.bewell.screens.FitnessScreen
+import com.example.bewell.screens.HomeScreen
+import com.example.bewell.screens.MainScreen
+import com.example.bewell.screens.OnboardingScreen
+import com.example.bewell.screens.ProfileScreen
+import com.example.bewell.screens.SetupUserGoal
+import com.example.bewell.screens.ViewFitnessExercise
 
 //Navigation Routes List
 enum class Screens {

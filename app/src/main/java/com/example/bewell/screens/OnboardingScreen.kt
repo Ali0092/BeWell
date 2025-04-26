@@ -1,4 +1,4 @@
-package com.example.bewell.presentation.screens
+package com.example.bewell.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -21,8 +21,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import com.example.bewell.R
-import com.example.bewell.common.Screens
-import com.example.bewell.data.datastore.DataStoreManager
+import com.example.bewell.nav_components.Screens
+import com.example.bewell.datastore.DataStoreManager
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor

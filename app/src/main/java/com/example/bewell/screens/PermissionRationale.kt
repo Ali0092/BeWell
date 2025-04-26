@@ -1,4 +1,4 @@
-package com.example.bewell.presentation.screens
+package com.example.bewell.screens
 
 import android.Manifest
 import android.content.Context

@@ -1,6 +1,5 @@
-package com.example.bewell.presentation.screens
+package com.example.bewell.screens
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -21,10 +20,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavHostController
 import com.example.bewell.common.OutlinedEditTextField
-import com.example.bewell.common.Screens
+import com.example.bewell.nav_components.Screens
 import com.example.bewell.common.Utils.checkIfCanMoveToNext
-import com.example.bewell.domain.model.UserProfile
-import com.example.bewell.presentation.viewmodel.UserProfileViewModel
+import com.example.bewell.viewmodel.UserProfileViewModel
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor

@@ -1,4 +1,4 @@
-package com.example.bewell.presentation.viewmodel
+package com.example.bewell.viewmodel
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

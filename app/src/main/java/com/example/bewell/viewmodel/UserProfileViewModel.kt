@@ -1,11 +1,11 @@
-package com.example.bewell.presentation.viewmodel
+package com.example.bewell.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bewell.domain.model.UserProfile
-import com.example.bewell.domain.repositoryDef.UserProfileRepository
-import com.example.bewell.presentation.viewstates.UserProfileState
+import com.example.bewell.model.UserProfile
+import com.example.bewell.repositoryDef.UserProfileRepository
+import com.example.bewell.viewstates.UserProfileState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -57,7 +57,7 @@ class UserProfileViewModel(private val userProfileRepository: UserProfileReposit
             _userProfileData.value.userProfile?.let {
                 Log.d("checkingBeWellData", "userProfileData: ${it}")
                 userProfileRepository.updateStepsGoal(monthId = it.id.toString(), stepsDid = it.totalStepsDid+1, calories =  calculateCalories(it.totalStepsDid+1))
-            }?: kotlin.run {
+            }?: run {
                 Log.d("checkingBeWellData", "userProfileData: its null no data")
             }
         }

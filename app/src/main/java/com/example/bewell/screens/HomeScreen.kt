@@ -1,4 +1,4 @@
-package com.example.bewell.presentation.screens
+package com.example.bewell.screens
 
 import android.os.Build
 import android.util.Log
@@ -63,8 +63,8 @@ import com.example.bewell.common.formatDateFromMillis
 import com.example.bewell.common.getDateDifferences
 import com.example.bewell.common.getDayOfMonthFromTimestamp
 import com.example.bewell.common.valueInThreeDecimalPoints
-import com.example.bewell.presentation.viewmodel.UserProfileViewModel
-import com.example.bewell.presentation.viewstates.UserProfileState
+import com.example.bewell.viewmodel.UserProfileViewModel
+import com.example.bewell.viewstates.UserProfileState
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor

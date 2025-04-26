@@ -1,4 +1,4 @@
-package com.example.bewell.domain.model
+package com.example.bewell.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

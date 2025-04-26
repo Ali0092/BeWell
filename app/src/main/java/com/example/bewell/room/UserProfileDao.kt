@@ -1,11 +1,11 @@
-package com.example.bewell.data.room
+package com.example.bewell.room
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.bewell.domain.model.UserProfile
+import com.example.bewell.model.UserProfile
 import kotlinx.coroutines.flow.Flow
 
 @Dao

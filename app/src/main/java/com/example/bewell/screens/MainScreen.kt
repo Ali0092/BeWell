@@ -1,4 +1,4 @@
-package com.example.bewell.presentation.screens
+package com.example.bewell.screens
 
 import android.Manifest
 import android.os.Build
@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.bewell.common.BottomNavGraph
+import com.example.bewell.nav_components.BottomNavGraph
 import com.example.bewell.common.Utils
 import com.example.bewell.ui.theme.darkBlueColor
 import com.example.bewell.ui.theme.secondaryColor

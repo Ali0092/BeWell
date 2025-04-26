@@ -1,4 +1,4 @@
-package com.example.bewell.presentation.screens
+package com.example.bewell.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -26,7 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import com.example.bewell.R
-import com.example.bewell.common.Screens
+import com.example.bewell.nav_components.Screens
 import com.example.bewell.common.Utils.selectedExercise
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp

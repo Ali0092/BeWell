@@ -1,7 +1,7 @@
-package com.example.bewell.domain.repositoryDef
+package com.example.bewell.repositoryDef
 
-import com.example.bewell.data.room.UserProfileDao
-import com.example.bewell.domain.model.UserProfile
+import com.example.bewell.room.UserProfileDao
+import com.example.bewell.model.UserProfile
 import kotlinx.coroutines.flow.Flow
 
 class UserProfileRepository(private val userProfileDao: UserProfileDao) {
