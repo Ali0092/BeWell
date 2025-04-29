@@ -49,6 +49,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Velocity
@@ -99,13 +100,6 @@ fun HomeScreen(
     var monthlyTotalSteps = userViewModel.totalStepsEver.collectAsState().value
     var monthlyAchievedSteps = userViewModel.totalStepsEverDid.collectAsState().value
 
-    var currentBarSize by remember { mutableStateOf(250f) } //current bar size
-    val collapseProgress by remember(currentBarSize) {  //collapse progress from 0-1f
-        derivedStateOf {
-            (250f - currentBarSize) / (250f - 60f)
-        }
-    }
-
     var showAdFoodDialog by remember { mutableStateOf(false) }
     var showAddWaterDialog by remember { mutableStateOf(false) }
     var showAdSleepDialog by remember { mutableStateOf(false) }
@@ -113,6 +107,13 @@ fun HomeScreen(
     var dialogTitle by remember { mutableStateOf("") }
     var dialogSubTitle by remember { mutableStateOf("") }
     var dialogEtLable by remember { mutableStateOf("") }
+
+    var currentBarSize by remember { mutableStateOf(250f) } //current bar size
+    val collapseProgress by remember(currentBarSize) {  //collapse progress from 0-1f
+        derivedStateOf {
+            (250f - currentBarSize) / (250f - 60f)
+        }
+    }
 
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
@@ -128,7 +129,15 @@ fun HomeScreen(
                 available: Offset,
                 source: NestedScrollSource,
             ): Offset {
-                return super.onPostScroll(consumed, available, source)
+                val delta = available.y
+                val previousBarSize = currentBarSize
+                val newBarSize = currentBarSize + delta.dp.value.toFloat()
+
+                currentBarSize = newBarSize.coerceIn(60f, 250f)
+                val consumed = currentBarSize - previousBarSize
+
+                return Offset(0f, consumed)
+//                return super.onPostScroll(consumed, available, source)
             }
 
             override suspend fun onPreFling(available: Velocity): Velocity {
@@ -139,14 +148,15 @@ fun HomeScreen(
                 available: Offset,
                 source: NestedScrollSource,
             ): Offset {
-                val delta = available.y
-                val previousBarSize = currentBarSize
-                val newBarSize = currentBarSize + delta.dp.value.toFloat()
-
-                currentBarSize = newBarSize.coerceIn(60f, 250f)
-                val consumed = currentBarSize - previousBarSize
-
-                return Offset(0f, consumed)
+//                val delta = available.y
+//                val previousBarSize = currentBarSize
+//                val newBarSize = currentBarSize + delta.dp.value.toFloat()
+//
+//                currentBarSize = newBarSize.coerceIn(60f, 250f)
+//                val consumed = currentBarSize - previousBarSize
+//
+//                return Offset(0f, consumed)
+                return super.onPreScroll(available, source)
             }
         }
     }
@@ -195,7 +205,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .offset(x = (-horizontalOffset).dp),
-                text = "BeWell",
+                text = stringResource(R.string.bewell),
                 fontSize = fontSize.sp,
                 color = darkBlueColor,
                 fontWeight = FontWeight.Bold
@@ -203,7 +213,7 @@ fun HomeScreen(
 
             Icon(
                 imageVector = Icons.Rounded.Star,
-                contentDescription = "Star",
+                contentDescription = null,
                 tint = darkBlueColor,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -260,7 +270,7 @@ fun HomeScreen(
                                         )
                                         Spacer(modifier = Modifier.width(4.sdp))
                                         Text(
-                                            text = "day",
+                                            text = stringResource(R.string.day),
                                             fontSize = 14.textSdp,
                                             color = darkPurpleColor,
                                             fontWeight = FontWeight.Normal
@@ -282,7 +292,7 @@ fun HomeScreen(
                                         )
                                         Spacer(modifier = Modifier.width(4.sdp))
                                         Text(
-                                            text = "${userData.userProfile?.stepsGoal} steps",
+                                            text = "${userData.userProfile?.stepsGoal} ${stringResource(R.string.steps)}",
                                             fontSize = 14.textSdp,
                                             color = darkPurpleColor,
                                             fontWeight = FontWeight.Normal
@@ -304,7 +314,7 @@ fun HomeScreen(
                                         )
                                         Spacer(modifier = Modifier.width(4.sdp))
                                         Text(
-                                            text = "${userData.userProfile?.caloriesBurnedTarget} kcal",
+                                            text = "${userData.userProfile?.caloriesBurnedTarget} ${stringResource(R.string.kcal)}",
                                             fontSize = 14.textSdp,
                                             color = darkPurpleColor,
                                             fontWeight = FontWeight.Normal
@@ -341,7 +351,7 @@ fun HomeScreen(
                             ) {
                                 Text(
                                     modifier = Modifier.weight(1f),
-                                    text = "This Month`s Goal",
+                                    text = stringResource(R.string.this_month_s_goal),
                                     fontSize = 24.textSdp,
                                     color = Color.White,
                                     fontWeight = FontWeight.Bold,
@@ -361,7 +371,7 @@ fun HomeScreen(
                                     )
                                     Spacer(modifier = Modifier.height(4.sdp))
                                     Text(
-                                        text = "/ ${monthlyTotalSteps} steps",
+                                        text = "/ ${monthlyTotalSteps} ${stringResource(R.string.steps)}",
                                         fontSize = 14.textSdp,
                                         color = Color.White,
                                         fontWeight = FontWeight.Bold
@@ -373,8 +383,8 @@ fun HomeScreen(
                         //Food, Sleep,Water
                         HomeScreenRoutineItem(
                             icon = R.drawable.food_icon,
-                            title = "Food",
-                            buttonText = "Enter Food",
+                            title = stringResource(R.string.food),
+                            buttonText = stringResource(R.string.enter_food),
                             progressBackgroundColor = darkGreenColor,
                             progressColor = lightGreenColor,
                             progressIndicatorTextColor = lightGreenColor,
@@ -390,8 +400,8 @@ fun HomeScreen(
                         Spacer(modifier = Modifier.height(16.sdp))
                         HomeScreenRoutineItem(
                             icon = R.drawable.water_icon,
-                            title = "Water",
-                            buttonText = "Add Water",
+                            title = stringResource(R.string.water),
+                            buttonText = stringResource(R.string.add_water),
                             progressBackgroundColor = lightPurpleColor,
                             progressColor = darkPurpleColor,
                             progressIndicatorTextColor = darkPurpleColor,
@@ -407,8 +417,8 @@ fun HomeScreen(
                         Spacer(modifier = Modifier.height(16.sdp))
                         HomeScreenRoutineItem(
                             icon = R.drawable.sleep_icon,
-                            title = "Sleep",
-                            buttonText = "Add Sleep Time",
+                            title = stringResource(R.string.sleep),
+                            buttonText = stringResource(R.string.add_sleep_time),
                             progressBackgroundColor = lightBlueColor,
                             progressColor = darkBlueColor,
                             progressIndicatorTextColor = darkBlueColor,
@@ -427,7 +437,6 @@ fun HomeScreen(
                 }
             }
         }
-
     }
 
 
@@ -634,14 +643,14 @@ fun AddSleepAndWaterDialog(
                                     add(text.toInt())
                                     onDismiss()
                                 } else  {
-                                    Toast.makeText(context, "Data must be filled ", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, context.getString(R.string.data_must_be_filled), Toast.LENGTH_SHORT).show()
                                 }
                             },
                             modifier = Modifier.padding(start = 14.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = darkPurpleColor)
                         ) {
                             Text(
-                                text = "Add",
+                                text = stringResource(R.string.add),
                                 color = Color.White,
                                 fontSize = 16.textSdp,
                                 fontWeight = FontWeight.Bold
