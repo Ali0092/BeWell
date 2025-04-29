@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import com.example.bewell.R
@@ -41,35 +42,31 @@ fun OnboardingScreen(
     val coroutineScope = rememberCoroutineScope()
 
     Surface(color = backgroundColor, modifier = modifier.fillMaxSize()) {
-        Box(
-            modifier = Modifier.padding(
-                start = 16.sdp, end = 16.sdp, top = 24.sdp, bottom = 16.sdp
-            )
-        ) {
+        Box(modifier = Modifier.padding(horizontal = 12.sdp, vertical = 24.sdp)) {
             Column {
                 Text(
-                    text = "Welcome to BeWell",
+                    text = stringResource(R.string.welcome_to_bewell),
                     fontSize = 28.textSdp,
                     color = darkBlueColor,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Track fitness, sleep, heart rate, and more...",
+                    text = stringResource(R.string.track_fitness_sleep_heart_rate_and_more),
                     fontSize = 11.textSdp,
                     color = primaryColor,
                     fontWeight = FontWeight.Bold
                 )
-                Spacer(Modifier.height(16.sdp))
+                Spacer(Modifier.height(8.sdp))
                 Text(
-                    text = "Monitor your daily steps, workouts, sleep patterns, heart rate, and overall health. Get personalized insights and tips to maintain a balanced lifestyle and achieve your wellness goals.",
+                    text = stringResource(R.string.monitor_your_daily_steps_workouts_sleep_patterns_heart_rate_and_overall_health_get_personalized_insights_and_tips_to_maintain_a_balanced_lifestyle_and_achieve_your_wellness_goals),
                     fontSize = 14.textSdp,
                     color = darkBlueColor,
                     modifier = Modifier.alpha(0.7f),
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.Normal
                 )
                 Image(
                     painter = painterResource(R.drawable.place_holder_for_onboarding),
-                    contentDescription = "Onboarding Image",
+                    contentDescription = null,
                     modifier = Modifier.weight(1f)
                 )
 
@@ -87,7 +84,7 @@ fun OnboardingScreen(
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 8.sdp, vertical = 4.sdp),
-                    text = "Continue",
+                    text = stringResource(R.string.continue_),
                     color = Color.White,
                     fontSize = 14.textSdp,
                     fontWeight = FontWeight.SemiBold

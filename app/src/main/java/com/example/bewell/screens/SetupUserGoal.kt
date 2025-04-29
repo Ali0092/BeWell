@@ -15,11 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavHostController
+import com.example.bewell.R
 import com.example.bewell.common.OutlinedEditTextField
 import com.example.bewell.nav_components.Screens
 import com.example.bewell.common.Utils.checkIfCanMoveToNext
@@ -29,7 +32,6 @@ import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor
 import com.example.bewell.ui.theme.darkBlueColor
-import com.example.bewell.ui.theme.primaryColor
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.get
 
@@ -41,47 +43,45 @@ fun SetupUserGoal(
 ) {
 
     val coroutineScope = rememberCoroutineScope()
-
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .padding(horizontal = 12.sdp, vertical = 24.sdp)
             .background(backgroundColor)
     ) {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 12.sdp, vertical = 24.sdp)
-                .background(backgroundColor)
-        ) {
+        Column {
 
             Text(
-                text = "Setup Daily Goal",
+                text = stringResource(R.string.setup_daily_goal),
                 fontSize = 28.textSdp,
                 color = darkBlueColor,
                 fontWeight = FontWeight.Bold
             )
             Spacer(Modifier.height(8.sdp))
             Text(
-                text = "Define your ideal steps, sleep, calories, and hydration targets.",
+                text = stringResource(R.string.define_your_ideal_steps_sleep_calories_and_hydration_targets),
                 fontSize = 14.textSdp,
-                color = primaryColor,
-                fontWeight = FontWeight.Bold
+                color = darkBlueColor,
+                modifier = Modifier.alpha(0.7f),
+                fontWeight = FontWeight.Normal
             )
             Spacer(Modifier.height(24.sdp))
 
             OutlinedEditTextField(
-                label = "Steps Goal",
-                placeHolder = "Steps (per day)",
+                label = stringResource(R.string.steps_goal),
+                placeHolder = stringResource(R.string.steps_per_day),
                 action = KeyboardType.Number,
                 onValueChanged = { it ->
                     viewModel.createUserProfileData.value.stepsGoal = it.toInt()
                 })
 
-            Spacer(Modifier.height(12.sdp))
+            Spacer(Modifier.height(8.sdp))
 
             OutlinedEditTextField(
-                label = "Calories intake",
-                placeHolder = "Calories intake (per day)",
+                label = stringResource(R.string.calories_intake),
+                placeHolder = stringResource(R.string.calories_intake_per_day),
                 action = KeyboardType.Number,
                 onValueChanged = { it ->
                     if (it.isNotEmpty()) {
@@ -89,11 +89,11 @@ fun SetupUserGoal(
                     }
                 })
 
-            Spacer(Modifier.height(12.sdp))
+            Spacer(Modifier.height(8.sdp))
 
             OutlinedEditTextField(
-                label = "Calories burn",
-                placeHolder = "Calories burn (per day)",
+                label = stringResource(R.string.calories_burn),
+                placeHolder = stringResource(R.string.calories_burn_per_day),
                 action = KeyboardType.Number,
                 onValueChanged = { it ->
                     if (it.isNotEmpty()) {
@@ -101,11 +101,11 @@ fun SetupUserGoal(
                     }
                 })
 
-            Spacer(Modifier.height(12.sdp))
+            Spacer(Modifier.height(8.sdp))
 
             OutlinedEditTextField(
-                label = "Water intake",
-                placeHolder = "Water (glasses per day)",
+                label = stringResource(R.string.water_intake),
+                placeHolder = stringResource(R.string.water_glasses_per_day),
                 action = KeyboardType.Number,
                 onValueChanged = { it ->
                     if (it.isNotEmpty()) {
@@ -113,11 +113,11 @@ fun SetupUserGoal(
                     }
                 })
 
-            Spacer(Modifier.height(12.sdp))
+            Spacer(Modifier.height(8.sdp))
 
             OutlinedEditTextField(
-                label = "Sleep time",
-                placeHolder = "Sleep(hours per day)",
+                label = stringResource(R.string.sleep_time),
+                placeHolder = stringResource(R.string.sleep_hours_per_day),
                 action = KeyboardType.Number,
                 onValueChanged = { it ->
                     if (it.isNotEmpty()) {
@@ -126,8 +126,6 @@ fun SetupUserGoal(
                 })
 
         }
-
-        val context = LocalContext.current
 
         ElevatedButton(
             colors = ButtonDefaults.buttonColors(containerColor = darkBlueColor), onClick = {
@@ -142,13 +140,11 @@ fun SetupUserGoal(
                         Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
                     }
                 }
-            }, modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 16.sdp, bottom = 16.sdp)
+            }, modifier = Modifier.align(Alignment.BottomEnd)
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 8.sdp, vertical = 4.sdp),
-                text = "Continue",
+                text = stringResource(R.string.continue_),
                 color = Color.White,
                 fontSize = 14.textSdp,
                 fontWeight = FontWeight.SemiBold

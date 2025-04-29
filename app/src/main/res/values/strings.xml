@@ -1,3 +1,31 @@
 <resources>
     <string name="app_name">BeWell</string>
+    <string name="welcome_to_bewell">Welcome to BeWell</string>
+    <string name="track_fitness_sleep_heart_rate_and_more">Track fitness, sleep, heart rate, and more...</string>
+    <string name="monitor_your_daily_steps_workouts_sleep_patterns_heart_rate_and_overall_health_get_personalized_insights_and_tips_to_maintain_a_balanced_lifestyle_and_achieve_your_wellness_goals">Monitor your daily steps, workouts, sleep patterns, heart rate, and overall health. Get personalized insights and tips to maintain a balanced lifestyle and achieve your wellness goals.</string>
+    <string name="continue_">Continue</string>
+    <string name="create_user_profile">Create User Profile</string>
+    <string name="we_need_your_information_to_help_you_out_to_achieve_your_goals_more_easily">We Need your information to help you out to achieve your goals more easily !</string>
+    <string name="full_name">Full name</string>
+    <string name="age">Age</string>
+    <string name="gender">Gender</string>
+    <string name="height">Height</string>
+    <string name="height_cm">Height(cm)</string>
+    <string name="weight">Weight</string>
+    <string name="weight_kg">Weight(kg)</string>
+    <string name="setup_daily_goal">Setup Daily Goal</string>
+    <string name="define_your_ideal_steps_sleep_calories_and_hydration_targets">Define your ideal steps, sleep, calories, and hydration targets.</string>
+    <string name="steps_goal">Steps Goal</string>
+    <string name="steps_per_day">Steps (per day)</string>
+    <string name="calories_intake">Calories intake</string>
+    <string name="calories_intake_per_day">Calories intake (per day)</string>
+    <string name="calories_burn">Calories burn</string>
+    <string name="calories_burn_per_day">Calories burn (per day)</string>
+    <string name="water_intake">Water intake</string>
+    <string name="water_glasses_per_day">Water (glasses per day)</string>
+    <string name="sleep_time">Sleep time</string>
+    <string name="sleep_hours_per_day">Sleep(hours per day)</string>
+    <string name="activity_recognizer_permission_required">Activity Recognizer Permission Required</string>
+    <string name="this_permission_allows_the_app_to_detect_and_understand_your_physical_activities_such_as_walking_running_cycling_or_driving_it_helps_enhance_user_experience_by_enabling_features_like_step_counting_activity_tracking_and_intelligent_behavior_based_responses_your_activity_data_is_processed_securely_and_used_solely_to_provide_personalized_and_context_aware_functionality_within_the_app">This permission allows the app to detect and understand your physical activities, such as walking, running, cycling, or driving. It helps enhance user experience by enabling features like step counting, activity tracking, and intelligent behavior-based responses. Your activity data is processed securely and used solely to provide personalized and context-aware functionality within the app.</string>
+    <string name="go_to_settings">Go to settings</string>
 </resources>

@@ -35,6 +35,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.content.ContextCompat
@@ -68,17 +69,17 @@ fun PermissionRationale() {
             Spacer(Modifier.height(18.sdp))
 
             Text(
-                "Activity Recognizer Permission Required",
+                stringResource(R.string.activity_recognizer_permission_required),
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.textSdp,
                 color = darkBlueColor,
                 textAlign = TextAlign.Start
             )
 
-            Spacer(Modifier.height(18.sdp))
+            Spacer(Modifier.height(16.sdp))
 
             Text(
-                "This permission allows the app to detect and understand your physical activities, such as walking, running, cycling, or driving. It helps enhance user experience by enabling features like step counting, activity tracking, and intelligent behavior-based responses. Your activity data is processed securely and used solely to provide personalized and context-aware functionality within the app.",
+                stringResource(R.string.this_permission_allows_the_app_to_detect_and_understand_your_physical_activities_such_as_walking_running_cycling_or_driving_it_helps_enhance_user_experience_by_enabling_features_like_step_counting_activity_tracking_and_intelligent_behavior_based_responses_your_activity_data_is_processed_securely_and_used_solely_to_provide_personalized_and_context_aware_functionality_within_the_app),
                 fontWeight = FontWeight.Medium,
                 fontSize = 16.textSdp,
                 color = darkBlueColor,
@@ -100,7 +101,7 @@ fun PermissionRationale() {
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 8.sdp, vertical = 4.sdp),
-                text = "Go to settings",
+                text = stringResource(R.string.go_to_settings),
                 color = Color.White,
                 fontSize = 14.textSdp,
                 fontWeight = FontWeight.SemiBold
