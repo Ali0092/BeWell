@@ -47,6 +47,8 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                 val dataStore: DataStoreManager = get()
                 val navController = rememberNavController()
 
+                userProfileViewModel
+
                 val isOnBoardingDone = dataStore.getSavedBooleanPref(DataStoreManager.ON_BOARDING_DONE_KEY).collectAsState(initial = null)
                 val isUserProfileDone = dataStore.getSavedBooleanPref(DataStoreManager.USER_PROFILE_DONE_KEY).collectAsState(initial = null)
 

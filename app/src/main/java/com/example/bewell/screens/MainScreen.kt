@@ -21,6 +21,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bewell.nav_components.BottomNavGraph
 import com.example.bewell.common.Utils
+import com.example.bewell.nav_components.Screens
 import com.example.bewell.ui.theme.darkBlueColor
 import com.example.bewell.ui.theme.secondaryColor
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -31,7 +32,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 @OptIn(ExperimentalPermissionsApi::class)
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun MainScreen() {
+fun MainScreen(rootNavController: NavHostController) {
     val navController = rememberNavController()
     val state = rememberPermissionState(
         Manifest.permission.ACTIVITY_RECOGNITION
@@ -44,9 +45,7 @@ fun MainScreen() {
     }, content = { innerPadding ->
         when{
             state.status.isGranted -> {
-                BottomNavGraph(
-                    modifier = Modifier.padding(innerPadding), navController = navController
-                )
+                BottomNavGraph(modifier = Modifier.padding(innerPadding), navController = navController, rootNavController = rootNavController)
             }
             else -> {
                 LaunchedEffect(Unit) {

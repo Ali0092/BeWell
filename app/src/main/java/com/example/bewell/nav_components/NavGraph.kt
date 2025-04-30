@@ -37,16 +37,19 @@ sealed class SimpleNavigation(val route: String) {
     class OnBoarding: SimpleNavigation(Screens.ONBOARDING.name)
     class CreateProfile: SimpleNavigation(Screens.CREATE_PROFILE.name)
     class SetupGoal: SimpleNavigation(Screens.SETUP_GOAL.name)
-    class Main: SimpleNavigation(Screens.ONBOARDING.name)
+    class Main: SimpleNavigation(Screens.MAIN.name)
     class FitnessDetail: SimpleNavigation(Screens.FITNESS_DETAILS.name)
     class ArScreen: SimpleNavigation(Screens.AR_SCREEN.name)
+
+    sealed class BottomNavigationScreens(val route: String, val title: String, val icon: Int) {
+        class Home: BottomNavigationScreens(Screens.HOME.name, "Home", R.drawable.home_icon)
+        class Fitness: BottomNavigationScreens(Screens.FITNESS.name, "Fitness", R.drawable.fitness_icon)
+        class Profile: BottomNavigationScreens(Screens.PROFILE.name, "Profile", R.drawable.profile_picture)
+    }
+
 }
 
-sealed class BottomNavigationScreens(val route: String, val title: String, val icon: Int) {
-    class Home: BottomNavigationScreens(Screens.HOME.name, "Home", R.drawable.home_icon)
-    class Fitness: BottomNavigationScreens(Screens.FITNESS.name, "Fitness", R.drawable.fitness_icon)
-    class Profile: BottomNavigationScreens(Screens.PROFILE.name, "Profile", R.drawable.profile_picture)
-}
+
 
 //NavGraph
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -72,8 +75,17 @@ fun NavGraph(
             SetupUserGoal(navController = navController)
         }
         composable(Screens.MAIN.name) {
-            MainScreen()
+            MainScreen(navController)
         }
+
+        composable(Screens.FITNESS_DETAILS.name) {
+            ViewFitnessExercise(navController = navController)
+        }
+
+        composable(Screens.AR_SCREEN.name) {
+            ARScreen()
+        }
+
     }
 }
 
@@ -82,6 +94,7 @@ fun NavGraph(
 fun BottomNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    rootNavController: NavHostController,
 ) {
     NavHost(
         modifier = modifier,
@@ -95,18 +108,16 @@ fun BottomNavGraph(
         }
 
         composable(Screens.FITNESS.name) {
-            FitnessScreen(navController = navController)
+            FitnessScreen(
+                navigateToDetailsScreen = {
+                    rootNavController.navigate(Screens.FITNESS_DETAILS.name)
+                }
+            )
         }
 
         composable(Screens.PROFILE.name) {
             ProfileScreen()
         }
 
-        composable(Screens.FITNESS_DETAILS.name) {
-            ViewFitnessExercise(navController = navController)
-        }
-        composable(Screens.AR_SCREEN.name) {
-            ARScreen()
-        }
     }
 }

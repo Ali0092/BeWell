@@ -55,7 +55,7 @@ import com.example.bewell.ui.theme.darkBlueColor
 import com.example.bewell.ui.theme.secondaryColor
 
 @Composable
-fun FitnessScreen(modifier: Modifier = Modifier, navController: NavHostController) {
+fun FitnessScreen(modifier: Modifier = Modifier, navigateToDetailsScreen:() -> Unit) {
 
     var currentBarSize by remember { mutableFloatStateOf(250f) }
     // Calculate transition progress (0.0 = expanded, 1.0 = collapsed)
@@ -144,13 +144,19 @@ fun FitnessScreen(modifier: Modifier = Modifier, navController: NavHostControlle
                 .offset(0.sdp, currentBarSize.toFloat().dp)
         ) {
             item {
-                FitnessScreenBar(navController= navController, title = stringResource(R.string.weight_loss), dataList = weightLossExercises)
+                FitnessScreenBar( title = stringResource(R.string.weight_loss), dataList = weightLossExercises) {
+                    navigateToDetailsScreen()
+                }
             }
             item {
-                FitnessScreenBar(navController= navController, title = stringResource(R.string.build_muscle), dataList = muscleBuildExercises)
+                FitnessScreenBar(title = stringResource(R.string.build_muscle), dataList = muscleBuildExercises) {
+                    navigateToDetailsScreen()
+                }
             }
             item {
-                FitnessScreenBar(navController= navController, title = stringResource(R.string.balanced_training), dataList = balancedTrainingExercises)
+                FitnessScreenBar(title = stringResource(R.string.balanced_training), dataList = balancedTrainingExercises) {
+                    navigateToDetailsScreen()
+                }
             }
         }
     }
@@ -158,7 +164,7 @@ fun FitnessScreen(modifier: Modifier = Modifier, navController: NavHostControlle
 }
 
 @Composable
-fun FitnessScreenBar(modifier: Modifier = Modifier, navController: NavHostController,title: String, dataList: List<FitnessExercises>) {
+fun FitnessScreenBar(modifier: Modifier = Modifier, title: String, dataList: List<FitnessExercises>, navigateToDetailsScreen: ()->Unit) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -190,7 +196,7 @@ fun FitnessScreenBar(modifier: Modifier = Modifier, navController: NavHostContro
                     FitnessBarSingleItem(title = dataList[index].name, img = dataList[index].image) {
                         //add navigation
                         selectedExercise = dataList[index] // selected exercise.....
-                        navController.navigate(Screens.FITNESS_DETAILS.name)
+                        navigateToDetailsScreen()
                     }
                 }
             }
