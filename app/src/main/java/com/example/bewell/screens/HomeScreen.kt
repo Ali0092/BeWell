@@ -36,6 +36,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -64,8 +65,6 @@ import com.example.bewell.common.formatDateFromMillis
 import com.example.bewell.common.getDateDifferences
 import com.example.bewell.common.getDayOfMonthFromTimestamp
 import com.example.bewell.common.valueInThreeDecimalPoints
-import com.example.bewell.viewmodel.UserProfileViewModel
-import com.example.bewell.viewstates.UserProfileState
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor
@@ -76,16 +75,9 @@ import com.example.bewell.ui.theme.lightBlueColor
 import com.example.bewell.ui.theme.lightGreenColor
 import com.example.bewell.ui.theme.lightPurpleColor
 import com.example.bewell.ui.theme.secondaryColor
+import com.example.bewell.viewmodel.UserProfileViewModel
+import com.example.bewell.viewstates.UserProfileState
 import org.koin.androidx.compose.get
-
-
-/*
-* 1. fix basic home screen bugs
-* 2. add view exercise screen of fitness page
-* 3. complete profile screen
-* 4. start AR work
-*/
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -108,7 +100,7 @@ fun HomeScreen(
     var dialogSubTitle by remember { mutableStateOf("") }
     var dialogEtLable by remember { mutableStateOf("") }
 
-    var currentBarSize by remember { mutableStateOf(250f) } //current bar size
+    var currentBarSize by remember { mutableFloatStateOf(250f) } //current bar size
     val collapseProgress by remember(currentBarSize) {  //collapse progress from 0-1f
         derivedStateOf {
             (250f - currentBarSize) / (250f - 60f)
@@ -137,7 +129,6 @@ fun HomeScreen(
                 val consumed = currentBarSize - previousBarSize
 
                 return Offset(0f, consumed)
-//                return super.onPostScroll(consumed, available, source)
             }
 
             override suspend fun onPreFling(available: Velocity): Velocity {
@@ -148,14 +139,6 @@ fun HomeScreen(
                 available: Offset,
                 source: NestedScrollSource,
             ): Offset {
-//                val delta = available.y
-//                val previousBarSize = currentBarSize
-//                val newBarSize = currentBarSize + delta.dp.value.toFloat()
-//
-//                currentBarSize = newBarSize.coerceIn(60f, 250f)
-//                val consumed = currentBarSize - previousBarSize
-//
-//                return Offset(0f, consumed)
                 return super.onPreScroll(available, source)
             }
         }
@@ -165,9 +148,8 @@ fun HomeScreen(
 
         if (userData.userProfile?.stepsGoal != null) {
 
-            userData.userProfile.date.getDateDifferences().forEach { it->
+            userData.userProfile.date.getDateDifferences().forEach { it ->
                 userViewModel.insertNewDay(it)
-                Log.d("checkingOutTheDifferenceBetweenDates", "difference: ${it.formatDateFromMillis()}")
             }
 
             goalProgress.value =
@@ -175,16 +157,11 @@ fun HomeScreen(
         }
     }
 
-    /*
-    * 1. Get user profile data and inflate all data on screen
-    * 2. Update all data on screen
-    * 3. Fill the gap dates
-    * */
-
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(backgroundColor)
+            .padding(horizontal = 12.sdp)
             .nestedScroll(nestedScrollConnection)
     ) {
 
@@ -230,210 +207,212 @@ fun HomeScreen(
                 .offset(0.sdp, currentBarSize.toFloat().dp)
         ) {
             item {
-                Box(
+                Column(
                     modifier
                         .fillMaxSize()
                         .padding(vertical = 16.sdp)
                 ) {
-                    Column {
-                        //daily card
-                        Surface(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.sdp),
-                            color = secondaryColor,
-                            shape = RoundedCornerShape(16.sdp),
-                            shadowElevation = 1.sdp
+                    //daily card
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        color = secondaryColor,
+                        shape = RoundedCornerShape(16.sdp),
+                        shadowElevation = 1.sdp
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Start
+                            Column(
+                                modifier = Modifier.padding(
+                                    vertical = 16.sdp, horizontal = 12.sdp
+                                ), verticalArrangement = Arrangement.Center
                             ) {
-                                Column(
-                                    modifier = Modifier.padding(
-                                        vertical = 16.sdp, horizontal = 12.sdp
-                                    ), verticalArrangement = Arrangement.Center
-                                ) {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Image(
-                                            painter = painterResource(R.drawable.day),
-                                            contentDescription = null,
-                                            modifier = Modifier.size(25.sdp)
-                                        )
-                                        Spacer(modifier = Modifier.width(8.sdp))
-                                        Text(
-                                            text = userData.userProfile?.date?.getDayOfMonthFromTimestamp()
-                                                .toString(),
-                                            fontSize = 24.textSdp,
-                                            color = darkBlueColor,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                        Spacer(modifier = Modifier.width(4.sdp))
-                                        Text(
-                                            text = stringResource(R.string.day),
-                                            fontSize = 14.textSdp,
-                                            color = darkPurpleColor,
-                                            fontWeight = FontWeight.Normal
-                                        )
-                                    }
-                                    Spacer(modifier = Modifier.height(6.sdp))
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Image(
-                                            painter = painterResource(R.drawable.footprint),
-                                            contentDescription = null,
-                                            modifier = Modifier.size(25.sdp)
-                                        )
-                                        Spacer(modifier = Modifier.width(8.sdp))
-                                        Text(
-                                            text = userData.userProfile?.totalStepsDid.toString() + " /",
-                                            fontSize = 24.textSdp,
-                                            color = darkBlueColor,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                        Spacer(modifier = Modifier.width(4.sdp))
-                                        Text(
-                                            text = "${userData.userProfile?.stepsGoal} ${stringResource(R.string.steps)}",
-                                            fontSize = 14.textSdp,
-                                            color = darkPurpleColor,
-                                            fontWeight = FontWeight.Normal
-                                        )
-                                    }
-                                    Spacer(modifier = Modifier.height(6.sdp))
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Image(
-                                            painter = painterResource(R.drawable.calories),
-                                            contentDescription = null,
-                                            modifier = Modifier.size(25.sdp)
-                                        )
-                                        Spacer(modifier = Modifier.width(8.sdp))
-                                        Text(
-                                            text = userData.userProfile?.totalCaloriesBurned.toString() + " /",
-                                            fontSize = 24.textSdp,
-                                            color = darkBlueColor,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                        Spacer(modifier = Modifier.width(4.sdp))
-                                        Text(
-                                            text = "${userData.userProfile?.caloriesBurnedTarget} ${stringResource(R.string.kcal)}",
-                                            fontSize = 14.textSdp,
-                                            color = darkPurpleColor,
-                                            fontWeight = FontWeight.Normal
-                                        )
-                                    }
-
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Image(
+                                        painter = painterResource(R.drawable.day),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(25.sdp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.sdp))
+                                    Text(
+                                        text = userData.userProfile?.date?.getDayOfMonthFromTimestamp()
+                                            .toString(),
+                                        fontSize = 24.textSdp,
+                                        color = darkBlueColor,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Spacer(modifier = Modifier.width(4.sdp))
+                                    Text(
+                                        text = stringResource(R.string.day),
+                                        fontSize = 14.textSdp,
+                                        color = darkPurpleColor,
+                                        fontWeight = FontWeight.Normal
+                                    )
                                 }
-                                Spacer(modifier.weight(1f))
-                                CircularProgressBar(
-                                    modifier = Modifier.padding(16.sdp),
-                                    progress = goalProgress.value,
-                                    size = 120.sdp,
-                                    strokeWidth = 8.sdp
-                                )
-                            }
+                                Spacer(modifier = Modifier.height(6.sdp))
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Image(
+                                        painter = painterResource(R.drawable.footprint),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(25.sdp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.sdp))
+                                    Text(
+                                        text = userData.userProfile?.totalStepsDid.toString() + " /",
+                                        fontSize = 24.textSdp,
+                                        color = darkBlueColor,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Spacer(modifier = Modifier.width(4.sdp))
+                                    Text(
+                                        text = "${userData.userProfile?.stepsGoal} ${
+                                            stringResource(
+                                                R.string.steps
+                                            )
+                                        }",
+                                        fontSize = 14.textSdp,
+                                        color = darkPurpleColor,
+                                        fontWeight = FontWeight.Normal
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(6.sdp))
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Image(
+                                        painter = painterResource(R.drawable.calories),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(25.sdp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.sdp))
+                                    Text(
+                                        text = userData.userProfile?.totalCaloriesBurned.toString() + " /",
+                                        fontSize = 24.textSdp,
+                                        color = darkBlueColor,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Spacer(modifier = Modifier.width(4.sdp))
+                                    Text(
+                                        text = "${userData.userProfile?.caloriesBurnedTarget} ${
+                                            stringResource(
+                                                R.string.kcal
+                                            )
+                                        }",
+                                        fontSize = 14.textSdp,
+                                        color = darkPurpleColor,
+                                        fontWeight = FontWeight.Normal
+                                    )
+                                }
 
+                            }
+                            Spacer(modifier.weight(1f))
+                            CircularProgressBar(
+                                modifier = Modifier.padding(16.sdp),
+                                progress = goalProgress.value,
+                                size = 120.sdp,
+                                strokeWidth = 8.sdp
+                            )
                         }
-                        Spacer(modifier = Modifier.height(16.sdp))
-                        //weekly card
-                        Surface(
+
+                    }
+                    Spacer(modifier = Modifier.height(12.sdp))
+                    //weekly card
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(120.sdp),
+                        color = lightPurpleColor,
+                        shape = RoundedCornerShape(16.sdp),
+                        tonalElevation = 1.sdp
+                    ) {
+                        Row(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .height(120.sdp)
-                                .padding(horizontal = 16.sdp),
-                            color = lightPurpleColor,
-                            shape = RoundedCornerShape(16.sdp),
-                            tonalElevation = 1.sdp
+                                .fillMaxSize()
+                                .padding(16.sdp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(16.sdp),
-                                verticalAlignment = Alignment.CenterVertically
+                            Text(
+                                modifier = Modifier.weight(1f),
+                                text = stringResource(R.string.this_month_s_goal),
+                                fontSize = 24.textSdp,
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1
+                            )
+
+
+                            Column(
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.Start
                             ) {
                                 Text(
-                                    modifier = Modifier.weight(1f),
-                                    text = stringResource(R.string.this_month_s_goal),
-                                    fontSize = 24.textSdp,
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Bold,
-                                    maxLines = 1
+                                    text = monthlyAchievedSteps.toString(),
+                                    fontSize = 42.textSdp,
+                                    color = darkPurpleColor,
+                                    fontWeight = FontWeight.Bold
                                 )
-
-
-                                Column(
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.Start
-                                ) {
-                                    Text(
-                                        text = monthlyAchievedSteps.toString(),
-                                        fontSize = 42.textSdp,
-                                        color = darkPurpleColor,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Spacer(modifier = Modifier.height(4.sdp))
-                                    Text(
-                                        text = "/ ${monthlyTotalSteps} ${stringResource(R.string.steps)}",
-                                        fontSize = 14.textSdp,
-                                        color = Color.White,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
+                                Spacer(modifier = Modifier.height(4.sdp))
+                                Text(
+                                    text = "/ ${monthlyTotalSteps} ${stringResource(R.string.steps)}",
+                                    fontSize = 14.textSdp,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold
+                                )
                             }
                         }
-                        Spacer(modifier = Modifier.height(16.sdp))
-                        //Food, Sleep,Water
-                        HomeScreenRoutineItem(
-                            icon = R.drawable.food_icon,
-                            title = stringResource(R.string.food),
-                            buttonText = stringResource(R.string.enter_food),
-                            progressBackgroundColor = darkGreenColor,
-                            progressColor = lightGreenColor,
-                            progressIndicatorTextColor = lightGreenColor,
-                            progressIndicatorText = if (userData.userProfile != null) ((userData.userProfile?.totalCaloriesIntake!!.toFloat() / userData.userProfile.caloriesIntake!!.toFloat()) * 100f).valueInThreeDecimalPoints()
-                                .toString() + "%" else "0 %",
-                            progress = if (userData.userProfile != null) ((userData.userProfile?.totalCaloriesIntake!!.toFloat() / userData.userProfile.caloriesIntake!!.toFloat()) * 100f) else 0f,
-                            onButtonClick = {
-                                showAdFoodDialog = true
-                                dialogTitle = "Add Food"
-                                dialogSubTitle = "Add Consumed calories"
-                                dialogEtLable = "Enter food"
-                            })//Food
-                        Spacer(modifier = Modifier.height(16.sdp))
-                        HomeScreenRoutineItem(
-                            icon = R.drawable.water_icon,
-                            title = stringResource(R.string.water),
-                            buttonText = stringResource(R.string.add_water),
-                            progressBackgroundColor = lightPurpleColor,
-                            progressColor = darkPurpleColor,
-                            progressIndicatorTextColor = darkPurpleColor,
-                            progressIndicatorText = if (userData.userProfile != null) ((userData.userProfile?.totalWaterIntake!!.toFloat() / userData.userProfile.waterIntake!!.toFloat()) * 100f).valueInThreeDecimalPoints()
-                                .toString() + " %" else "0 %",
-                            progress = if (userData.userProfile != null) ((userData.userProfile?.totalWaterIntake!!.toFloat() / userData.userProfile.waterIntake!!.toFloat()) * 100f) else 0f,
-                            onButtonClick = {
-                                showAddWaterDialog = true
-                                dialogTitle = "Add Water"
-                                dialogSubTitle = "Add Consumed water in glasses"
-                                dialogEtLable = "Water Glasses"
-                            })//Water
-                        Spacer(modifier = Modifier.height(16.sdp))
-                        HomeScreenRoutineItem(
-                            icon = R.drawable.sleep_icon,
-                            title = stringResource(R.string.sleep),
-                            buttonText = stringResource(R.string.add_sleep_time),
-                            progressBackgroundColor = lightBlueColor,
-                            progressColor = darkBlueColor,
-                            progressIndicatorTextColor = darkBlueColor,
-                            progressIndicatorText = if (userData.userProfile != null) ((userData.userProfile?.totalSleepOurs!!.toFloat() / userData.userProfile.sleepTime!!.toFloat()) * 100f).valueInThreeDecimalPoints()
-                                .toString() + "%" else "0%",
-                            progress = if (userData.userProfile != null) ((userData.userProfile?.totalSleepOurs!!.toFloat() / userData.userProfile.sleepTime!!.toFloat()) * 100f) else 0f,
-                            isLastItem = true,
-                            onButtonClick = {
-                                showAdSleepDialog = true
-                                dialogTitle = "Add Sleep time"
-                                dialogSubTitle = "Add Sleep time in hours"
-                                dialogEtLable = "Sleep time"
-                            })//Sleep
-                        Spacer(modifier = Modifier.height(16.sdp)) //temp
                     }
+                    Spacer(modifier = Modifier.height(12.sdp))
+                    //Food, Sleep,Water
+                    HomeScreenRoutineItem(
+                        icon = R.drawable.food_icon,
+                        title = stringResource(R.string.food),
+                        buttonText = stringResource(R.string.enter_food),
+                        progressBackgroundColor = darkGreenColor,
+                        progressColor = lightGreenColor,
+                        progressIndicatorTextColor = lightGreenColor,
+                        progressIndicatorText = if (userData.userProfile != null) ((userData.userProfile?.totalCaloriesIntake!!.toFloat() / userData.userProfile.caloriesIntake!!.toFloat()) * 100f).valueInThreeDecimalPoints()
+                            .toString() + "%" else "0 %",
+                        progress = if (userData.userProfile != null) ((userData.userProfile?.totalCaloriesIntake!!.toFloat() / userData.userProfile.caloriesIntake!!.toFloat()) * 100f) else 0f,
+                        onButtonClick = {
+                            showAdFoodDialog = true
+                            dialogTitle = "Add Food"
+                            dialogSubTitle = "Add Consumed calories"
+                            dialogEtLable = "Enter food"
+                        })//Food
+                    Spacer(modifier = Modifier.height(12.sdp))
+                    HomeScreenRoutineItem(
+                        icon = R.drawable.water_icon,
+                        title = stringResource(R.string.water),
+                        buttonText = stringResource(R.string.add_water),
+                        progressBackgroundColor = lightPurpleColor,
+                        progressColor = darkPurpleColor,
+                        progressIndicatorTextColor = darkPurpleColor,
+                        progressIndicatorText = if (userData.userProfile != null) ((userData.userProfile?.totalWaterIntake!!.toFloat() / userData.userProfile.waterIntake!!.toFloat()) * 100f).valueInThreeDecimalPoints()
+                            .toString() + " %" else "0 %",
+                        progress = if (userData.userProfile != null) ((userData.userProfile?.totalWaterIntake!!.toFloat() / userData.userProfile.waterIntake!!.toFloat()) * 100f) else 0f,
+                        onButtonClick = {
+                            showAddWaterDialog = true
+                            dialogTitle = "Add Water"
+                            dialogSubTitle = "Add Consumed water in glasses"
+                            dialogEtLable = "Water Glasses"
+                        })//Water
+                    Spacer(modifier = Modifier.height(12.sdp))
+                    HomeScreenRoutineItem(
+                        icon = R.drawable.sleep_icon,
+                        title = stringResource(R.string.sleep),
+                        buttonText = stringResource(R.string.add_sleep_time),
+                        progressBackgroundColor = lightBlueColor,
+                        progressColor = darkBlueColor,
+                        progressIndicatorTextColor = darkBlueColor,
+                        progressIndicatorText = if (userData.userProfile != null) ((userData.userProfile?.totalSleepOurs!!.toFloat() / userData.userProfile.sleepTime!!.toFloat()) * 100f).valueInThreeDecimalPoints()
+                            .toString() + "%" else "0%",
+                        progress = if (userData.userProfile != null) ((userData.userProfile?.totalSleepOurs!!.toFloat() / userData.userProfile.sleepTime!!.toFloat()) * 100f) else 0f,
+                        isLastItem = true,
+                        onButtonClick = {
+                            showAdSleepDialog = true
+                            dialogTitle = "Add Sleep time"
+                            dialogSubTitle = "Add Sleep time in hours"
+                            dialogEtLable = "Sleep time"
+                        })//Sleep
                 }
             }
         }
@@ -446,12 +425,13 @@ fun HomeScreen(
         subtitle = dialogSubTitle,
         etLabel = dialogEtLable,
         etPlaceHolder = dialogEtLable,
-        onDismiss =  {
+        onDismiss = {
             showAdFoodDialog = false
         },
-        add = { data->
+        add = { data ->
             showAdFoodDialog = false
-            userViewModel.userProfileData.value.userProfile!!.totalCaloriesIntake = userViewModel.userProfileData.value.userProfile!!.totalCaloriesIntake!!+data
+            userViewModel.userProfileData.value.userProfile!!.totalCaloriesIntake =
+                userViewModel.userProfileData.value.userProfile!!.totalCaloriesIntake!! + data
             userViewModel.updateUserData()
         },
     )
@@ -463,12 +443,13 @@ fun HomeScreen(
         subtitle = dialogSubTitle,
         etLabel = dialogEtLable,
         etPlaceHolder = dialogEtLable,
-        onDismiss =  {
+        onDismiss = {
             showAddWaterDialog = false
         },
         add = { data ->
             showAddWaterDialog = false
-            userViewModel.userProfileData.value.userProfile!!.totalWaterIntake = userViewModel.userProfileData.value.userProfile!!.totalWaterIntake!!+data
+            userViewModel.userProfileData.value.userProfile!!.totalWaterIntake =
+                userViewModel.userProfileData.value.userProfile!!.totalWaterIntake!! + data
             userViewModel.updateUserData()
         },
     )
@@ -479,12 +460,13 @@ fun HomeScreen(
         subtitle = dialogSubTitle,
         etLabel = dialogEtLable,
         etPlaceHolder = dialogEtLable,
-        onDismiss =  {
+        onDismiss = {
             showAdSleepDialog = false
         },
         add = { data ->
             showAdSleepDialog = false
-            userViewModel.userProfileData.value.userProfile!!.totalSleepOurs = userViewModel.userProfileData.value.userProfile!!.totalSleepOurs!!+data
+            userViewModel.userProfileData.value.userProfile!!.totalSleepOurs =
+                userViewModel.userProfileData.value.userProfile!!.totalSleepOurs!! + data
 
             userViewModel.updateUserData()
         },
@@ -510,7 +492,7 @@ fun HomeScreenRoutineItem(
         modifier = Modifier
             .fillMaxWidth()
             .height(120.sdp)
-            .padding(start = 16.sdp, end = 16.sdp, bottom = if (isLastItem) 2.sdp else 0.sdp),
+            .padding(bottom = if (isLastItem) 2.sdp else 0.sdp),
         color = secondaryColor,
         shape = RoundedCornerShape(16.sdp),
         shadowElevation = 1.sdp
@@ -642,8 +624,12 @@ fun AddSleepAndWaterDialog(
                                 if (text.isNotEmpty()) {
                                     add(text.toInt())
                                     onDismiss()
-                                } else  {
-                                    Toast.makeText(context, context.getString(R.string.data_must_be_filled), Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.data_must_be_filled),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             },
                             modifier = Modifier.padding(start = 14.dp),

@@ -13,4 +13,13 @@
 .externalNativeBuild
 .cxx
 local.properties
-/app/src/main/assets/
+
+
+# Ignore 3D model files
+app/src/main/assets/models/
+*.glb
+*.gltf
+
+# Ignore APKs
+*.apk
+app/release/

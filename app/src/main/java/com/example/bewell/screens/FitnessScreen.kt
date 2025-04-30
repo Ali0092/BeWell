@@ -34,12 +34,14 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.bewell.R
 import com.example.bewell.common.FitnessExercises
 import com.example.bewell.nav_components.Screens
 import com.example.bewell.common.Utils.balancedTrainingExercises
@@ -76,7 +78,14 @@ fun FitnessScreen(modifier: Modifier = Modifier, navController: NavHostControlle
                 available: Offset,
                 source: NestedScrollSource,
             ): Offset {
-                return super.onPostScroll(consumed, available, source)
+                val delta = available.y
+
+                val previousBarSize = currentBarSize
+                val newBarSize = currentBarSize + delta.dp.value.toFloat()
+                currentBarSize = newBarSize.coerceIn(60f, 250f)
+                val consumed = currentBarSize - previousBarSize
+
+                return Offset(0f, consumed)
             }
 
             override suspend fun onPreFling(available: Velocity): Velocity {
@@ -87,14 +96,7 @@ fun FitnessScreen(modifier: Modifier = Modifier, navController: NavHostControlle
                 available: Offset,
                 source: NestedScrollSource,
             ): Offset {
-                val delta = available.y
-
-                val previousBarSize = currentBarSize
-                val newBarSize = currentBarSize + delta.dp.value.toFloat()
-                currentBarSize = newBarSize.coerceIn(60f, 250f)
-                val consumed = currentBarSize - previousBarSize
-
-                return Offset(0f, consumed)
+                return super.onPreScroll(available, source)
             }
         }
     }
@@ -123,7 +125,7 @@ fun FitnessScreen(modifier: Modifier = Modifier, navController: NavHostControlle
             val fontSize = 36 - (10 * collapseProgress)
 
             Text(
-                text = "Fitness",
+                text = stringResource(R.string.fitness),
                 color = darkBlueColor,
                 fontSize = fontSize.sp,
                 fontWeight = FontWeight.Bold,
@@ -142,13 +144,13 @@ fun FitnessScreen(modifier: Modifier = Modifier, navController: NavHostControlle
                 .offset(0.sdp, currentBarSize.toFloat().dp)
         ) {
             item {
-                FitnessScreenBar(navController= navController, title = "Weight Loss", dataList = weightLossExercises)
+                FitnessScreenBar(navController= navController, title = stringResource(R.string.weight_loss), dataList = weightLossExercises)
             }
             item {
-                FitnessScreenBar(navController= navController, title = "Build Muscle", dataList = muscleBuildExercises)
+                FitnessScreenBar(navController= navController, title = stringResource(R.string.build_muscle), dataList = muscleBuildExercises)
             }
             item {
-                FitnessScreenBar(navController= navController, title = "Balanced Training", dataList = balancedTrainingExercises)
+                FitnessScreenBar(navController= navController, title = stringResource(R.string.balanced_training), dataList = balancedTrainingExercises)
             }
         }
     }
@@ -181,7 +183,9 @@ fun FitnessScreenBar(modifier: Modifier = Modifier, navController: NavHostContro
                 fontWeight = FontWeight.Bold
             )
 
-            LazyRow(modifier = Modifier.fillMaxWidth().padding(end = 6.sdp)) {
+            LazyRow(modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 6.sdp)) {
                 items(10) { index->
                     FitnessBarSingleItem(title = dataList[index].name, img = dataList[index].image) {
                         //add navigation

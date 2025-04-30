@@ -42,7 +42,9 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import com.example.bewell.R
@@ -57,102 +59,23 @@ import com.example.bewell.ui.theme.secondaryColor
 import org.koin.androidx.compose.get
 
 @Composable
-fun ProfileScreen(modifier: Modifier = Modifier, userViewModel: UserProfileViewModel = get()) {
+fun ProfileScreen() {
 
-    var currentBarSize by remember { mutableStateOf(250f) } //current bar size
-    val collapseProgress by remember(currentBarSize) {  //collapse progress from 0-1f
-        derivedStateOf {
-            (250f - currentBarSize) / (250f - 60f)
-        }
-    }
-    val userData = userViewModel.userProfileData.collectAsState(initial = UserProfileState()).value
-
-    val nestedScrollConnection = remember {
-        object : NestedScrollConnection {
-            override suspend fun onPostFling(
-                consumed: Velocity,
-                available: Velocity,
-            ): Velocity {
-                return super.onPostFling(consumed, available)
-            }
-
-            override fun onPostScroll(
-                consumed: Offset,
-                available: Offset,
-                source: NestedScrollSource,
-            ): Offset {
-                return super.onPostScroll(consumed, available, source)
-            }
-
-            override suspend fun onPreFling(available: Velocity): Velocity {
-                return super.onPreFling(available)
-            }
-
-            override fun onPreScroll(
-                available: Offset,
-                source: NestedScrollSource,
-            ): Offset {
-                val delta = available.y
-                val previousBarSize = currentBarSize
-                val newBarSize = currentBarSize + delta.dp.value.toFloat()
-
-                currentBarSize = newBarSize.coerceIn(60f, 250f)
-                val consumed = currentBarSize - previousBarSize
-
-                return Offset(0f, consumed)
-            }
-        }
-    }
-
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundColor)
-            .nestedScroll(nestedScrollConnection)
+            .background(backgroundColor),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-
-        Box(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(250.sdp)
-                .background(backgroundColor)
-        ) {
-
-//            val screenWidth = LocalConfiguration.current.screenWidthDp
-//            val maxOffset = (screenWidth / 2) - 48  // Rough estimate for centered to start position
-//            val horizontalOffset = maxOffset * collapseProgress
-//
-//            val fontSize = 36 - (10 * collapseProgress)
-
-            Text(
-                modifier = Modifier
-                    .align(Alignment.Center)
-//                    .offset(x = (-horizontalOffset).dp)
-                ,
-                text = "My Page",
-                fontSize = 36.textSdp,
-                color = darkBlueColor,
-                fontWeight = FontWeight.Bold
-            )
-
-        }
-        LazyColumn(
-            modifier = modifier
-                .fillMaxWidth()
-                .align(Alignment.TopStart)
-                .offset(0.sdp, currentBarSize.toFloat().dp)
-        ) {
-            item {
-                BasicProfileCard(userData.userProfile?.name.toString()+" ( ${userData.userProfile?.age.toString()} yrs )")
-            }
-            item {
-                BadgesCard()
-            }
-        }
-
+        Image(painter = painterResource(R.drawable.inprogress), contentDescription = null, modifier = Modifier.size(300.sdp))
+        Text(
+            text = stringResource(R.string.in_progress),
+            fontSize = 18.textSdp,
+            color = darkBlueColor,
+            fontWeight = FontWeight.Bold
+        )
     }
-
-
 
 }
 
@@ -163,14 +86,14 @@ fun BasicProfileCard(name: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 8.sdp, end = 8.sdp, top = 16.sdp, bottom = 12.sdp)
+            .padding(start = 8.sdp, end = 8.sdp, bottom = 12.sdp)
     ) {
 
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(170.sdp)
-                .padding(top = 60.sdp, start = 8.sdp, end = 8.sdp, bottom = 4.sdp),
+                .padding(start = 8.sdp, end = 8.sdp, bottom = 4.sdp),
             color = secondaryColor,
             shape = RoundedCornerShape(16.sdp),
             shadowElevation = 1.sdp
@@ -208,16 +131,6 @@ fun BasicProfileCard(name: String) {
             )
         }
 
-        Image(
-            painter = painterResource(R.drawable.profile_picture),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(100.sdp)
-                .align(Alignment.TopCenter)
-                .clip(CircleShape)
-        )
-
     }
 
 }
@@ -235,7 +148,10 @@ fun BadgesCard(modifier: Modifier = Modifier) {
         shadowElevation = 1.sdp
     ) {
 
-        Column( modifier = Modifier.fillMaxSize().padding(12.sdp)) {
+        Column( modifier = Modifier
+            .fillMaxWidth()
+            .height(200.sdp)
+            .padding(12.sdp)) {
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 8.sdp)) {

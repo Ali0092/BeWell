@@ -23,39 +23,51 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import com.example.bewell.R
-import com.example.bewell.nav_components.Screens
 import com.example.bewell.common.Utils.selectedExercise
+import com.example.bewell.nav_components.Screens
 import com.example.bewell.ui.sdp
 import com.example.bewell.ui.textSdp
 import com.example.bewell.ui.theme.backgroundColor
 import com.example.bewell.ui.theme.darkBlueColor
 
 @Composable
-fun ViewFitnessExercise(modifier: Modifier = Modifier, navController : NavHostController) {
+fun ViewFitnessExercise(modifier: Modifier = Modifier, navController: NavHostController) {
 
     Surface(
-        modifier = modifier.fillMaxSize(),
-        color = backgroundColor
+        modifier = modifier.fillMaxSize(), color = backgroundColor
     ) {
-        Column(modifier = Modifier.fillMaxSize().padding(horizontal = 12.sdp, vertical = 8.sdp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 12.sdp, vertical = 8.sdp)
+        ) {
             //TopBar
-            Row(modifier = Modifier.fillMaxWidth().height(66.sdp), verticalAlignment = Alignment.CenterVertically) {
-                Icon(imageVector = Icons.Rounded.ArrowBack,contentDescription = null, tint = darkBlueColor,
-                    modifier = Modifier.clickable{
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(66.sdp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.ArrowBack,
+                    contentDescription = null,
+                    tint = darkBlueColor,
+                    modifier = Modifier.clickable {
                         navController.navigateUp()
                     })
                 Spacer(modifier = Modifier.width(8.sdp))
                 Text(
-                    text ="Exercise Details",
+                    text = stringResource(R.string.exercise_details),
                     fontSize = 16.textSdp,
                     color = darkBlueColor,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                if (selectedExercise.model!="") {
+                if (selectedExercise.model != "") {
                     Image(
                         painter = painterResource(R.drawable.ar_view),
                         contentDescription = null,
@@ -63,8 +75,7 @@ fun ViewFitnessExercise(modifier: Modifier = Modifier, navController : NavHostCo
                             .size(30.sdp)
                             .clickable {
                                 navController.navigate(Screens.AR_SCREEN.name)
-                            }
-                    )
+                            })
                 }
             }
             //Body

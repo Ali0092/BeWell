@@ -41,4 +41,10 @@
     <string name="add_sleep_time">Add Sleep Time</string>
     <string name="data_must_be_filled">"Data must be filled "</string>
     <string name="add">Add</string>
+    <string name="fitness">Fitness</string>
+    <string name="weight_loss">Weight Loss</string>
+    <string name="build_muscle">Build Muscle</string>
+    <string name="balanced_training">Balanced Training</string>
+    <string name="in_progress">In Progress</string>
+    <string name="exercise_details">Exercise Details</string>
 </resources>
