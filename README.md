@@ -42,7 +42,12 @@ BeWell is a modern Android health tracking app that uses Jetpack Compose and AI 
 <div style="display: flex; gap: 50px;">
   <img src="https://github.com/user-attachments/assets/6b186ee8-1985-444b-aa9d-826e1f2fd4b4" alt="Screen1" width="250"/>
   <img src="https://github.com/user-attachments/assets/5190aaea-8e06-424a-ad4c-7f91b274dcaf" alt="Screen2" width="250"/>
- <img src="https://github.com/user-attachments/assets/aec495e0-48b3-44db-8724-13769372442c" alt="Screen4" width="250"/>
+  <img src="https://github.com/user-attachments/assets/aec495e0-48b3-44db-8724-13769372442c" alt="Screen4" width="250"/>
+  
+
+https://github.com/user-attachments/assets/6e3b063a-82ad-41ce-8376-f56164bf1bf0
+
+
 </div>
 
 
